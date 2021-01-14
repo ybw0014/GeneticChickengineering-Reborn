@@ -1,0 +1,7 @@
+options:
+  # The percent chance that a stock chicken will have recessive alleles
+  mutation-rate: 50
+  # The max number of recessive alleles a converted chicken can generate
+  max-mutation: 2
+  # Should custom names be used to show resources
+  display-resource-in-name: true
