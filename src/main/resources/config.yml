@@ -1,7 +1,8 @@
 options:
-  # The percent chance that a stock chicken will have recessive alleles
-  mutation-rate: 50
-  # The max number of recessive alleles a converted chicken can generate
-  max-mutation: 2
+  auto-update: true
   # Should custom names be used to show resources
   display-resource-in-name: true
+  # The max number of heterozygous genes a newly converted chicken can generate, from 1-6
+  max-mutation: 2
+  # The percent chance that a newly converted chicken will have any recessive alleles
+  mutation-rate: 50

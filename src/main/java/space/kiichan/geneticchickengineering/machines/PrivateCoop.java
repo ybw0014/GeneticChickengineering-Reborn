@@ -24,8 +24,6 @@ import space.kiichan.geneticchickengineering.items.GCEItems;
 public class PrivateCoop extends AContainer {
     private GeneticChickengineering plugin;
     private final PocketChicken pc;
-    private int[] dynamicOutputSlots;
-    private final int[] staticOutputSlots = new int[]{ 24, 25 };
 
     public PrivateCoop(GeneticChickengineering plugin, Category category, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
         super(category, item, recipeType, recipe);
@@ -43,15 +41,6 @@ public class PrivateCoop extends AContainer {
     }
 
     @Override
-    public int[] getOutputSlots() {
-        if (this.dynamicOutputSlots == null) {
-            return new int[]{ 24, 25 };
-        } else {
-            return this.dynamicOutputSlots;
-        }
-    }
-
-    @Override
     protected void tick(Block b) {
         super.tick(b);
         if (isProcessing(b)) {
@@ -61,7 +50,7 @@ public class PrivateCoop extends AContainer {
             }
             BlockMenu inv = BlockStorage.getInventory(b);
             // Check if parent chickens have been removed
-            if (this.findNextRecipe(inv) == null) {
+            if (this.getParents(inv).size() != 2) {
                 progress.remove(b);
                 processing.remove(b);
                 inv.replaceExistingItem(22, new CustomItem(Material.BLACK_STAINED_GLASS_PANE, " "));
@@ -69,14 +58,16 @@ public class PrivateCoop extends AContainer {
         }
     }
 
-    @Override
-    protected MachineRecipe findNextRecipe(BlockMenu inv) {
+    private List<ItemStack> getParents(BlockMenu inv) {
         List<ItemStack> parents = new LinkedList<ItemStack>();
-        this.dynamicOutputSlots = new int[]{ 24, 25 };
         for (int slot : getInputSlots()) {
             ItemStack parent = inv.getItemInSlot(slot);
             if (parent == null) {
-                return null;
+                // since this machine only works with two parents
+                // and this method is used to check for two chickens, 
+                // we just return the list here since it won't have
+                // a length of two anyway, saving some time
+                return parents;
             }
             if (this.pc.isPocketChicken(parent)) {
                 if (this.pc.isAdult(parent)) {
@@ -84,41 +75,27 @@ public class PrivateCoop extends AContainer {
                 }
             }
         }
+        return parents;
+    }
+
+    @Override
+    protected MachineRecipe findNextRecipe(BlockMenu inv) {
+        List<ItemStack> parents = this.getParents(inv);
         if (parents.size() == 2) {
             ItemStack baby = this.pc.breed(parents.get(0), parents.get(1));
             if (baby == null) {
                 // Shouldn't ever be here, just in case
                 return null;
             }
-            MachineRecipe recipe = new MachineRecipe(120, new ItemStack[] { parents.get(0), parents.get(1) }, new ItemStack[] {baby});
+            MachineRecipe recipe = new MachineRecipe(60, new ItemStack[] { parents.get(0), parents.get(1) }, new ItemStack[] {baby});
 
-            /* Here we circumvent baby chicks being stacked, therefore making a
-             * clone of the elder sibling instead of a new baby.
-             * 
-             * There are patches incoming to CS-CoreLib to fix this, but for
-             * the time being this remains an issue.
-             * 
-             * Commented out below is the preferred method to do this once the
-             * changes get merged. Also remove the static/dynamicOutputSlots
-             * and the getOutputSlots override.
-             */
             Inventory invi = inv.toInventory();
-            for (int slot : this.staticOutputSlots) {
-                ItemStack stack = invi.getItem(slot);
-
-                if (stack == null || stack.getType() == Material.AIR) {
-                    this.dynamicOutputSlots = new int[]{ slot };
-                    return recipe;
-                }
+            invi.setMaxStackSize(1);
+            if (!InvUtils.fits(invi, baby, getOutputSlots())) {
+                return null;
             }
 
-            //~ Inventory invi = inv.toInventory();
-            //~ invi.setMaxStackSize(1);
-            //~ if (!InvUtils.fits(invi, baby, getOutputSlots())) {
-                //~ return null;
-            //~ }
-
-            //~ return recipe;
+            return recipe;
         }
         return null;
     }

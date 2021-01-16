@@ -77,4 +77,69 @@ Netherite | r | r | r | r | r | r | 6
 
 ## By Name
 
-# todo
+Chicken | B | C | D | F | S | W
+-- | -- | -- | -- | -- | -- | --
+Aluminum Dust | D | D | r | D | r | r
+Andesite | D | r | D | r | D | D
+Basalt | r | D | r | r | D | r
+Blackstone | r | r | r | r | D | D
+Blaze Rod | r | r | D | r | r | D
+Bone | r | D | D | D | D | D
+Cactus | D | D | r | r | D | r
+Cake | r | D | D | D | r | r
+Clay | D | D | r | D | r | D
+Coal | r | r | D | D | D | D
+Cobblestone | D | r | D | D | D | D
+Copper Dust | D | r | r | D | r | D
+Crying Obsidian | D | r | r | r | D | r
+Diamond | r | r | r | r | r | D
+Diorite | D | r | r | D | D | D
+Dirt | D | D | r | D | D | D
+Emerald | D | r | r | r | r | r
+End Stone | r | r | r | r | D | r
+Ender Pearl | r | D | r | D | r | r
+Feather | D | D | D | D | D | D
+Flint | D | D | D | r | D | D
+Ghast Tear | r | D | r | r | r | D
+Glass | r | r | D | D | r | D
+Glowstone Dust | D | D | r | r | r | r
+Gold | r | r | r | D | D | D
+Gold Dust | r | D | r | D | D | r
+Granite | D | D | r | r | D | D
+Gravel | D | r | D | D | r | D
+Gunpowder | D | D | D | r | r | D
+Ice | D | r | D | D | D | r
+Iron | r | D | r | r | D | D
+Iron Dust | r | D | r | D | r | D
+Kelp | D | D | D | r | D | r
+Lapis | r | r | D | D | D | r
+Lava | D | r | D | r | r | D
+Lead Dust | D | D | D | r | r | r
+Leather | r | D | D | r | D | D
+Magma Cream | D | r | D | r | r | r
+Magnesium Dust | D | r | r | D | D | r
+Nether Quartz | r | r | D | r | D | r
+Netherite | r | r | r | r | r | r
+Netherrack | r | r | D | r | D | D
+Netherwart | D | r | r | D | r | r
+Oak Log | D | D | r | D | D | r
+Obsidian | D | r | r | r | D | D
+Phantom Membrane | r | D | D | r | r | r
+Prismarine Crystal | r | r | r | D | r | r
+Prismarine Shard | r | r | D | r | r | r
+Redstone | D | D | r | r | r | D
+Sand | D | D | D | D | r | D
+Shroomlight | r | r | r | D | D | r
+Silver Dust | r | D | D | r | r | D
+Slime | D | D | D | D | r | r
+Snowball | D | r | D | D | r | r
+Soul Sand | r | r | D | D | r | r
+Soul Soil | r | r | r | D | r | D
+Sponge | r | D | D | D | D | r
+String | r | D | r | D | D | D
+Sugar | r | D | D | D | r | D
+Sulfate | D | r | r | r | r | D
+Tin Dust | D | r | D | r | D | r
+Water | D | D | D | D | D | r
+XP | r | D | r | r | r | r
+Zinc Dust | r | D | D | r | D | r

@@ -14,6 +14,7 @@ import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.abstractItems.AContainer;
 import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import me.mrCookieSlime.Slimefun.cscorelib2.config.Config;
 import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
+import me.mrCookieSlime.Slimefun.cscorelib2.updater.GitHubBuildsUpdater;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Entity;
@@ -51,10 +52,10 @@ public class GeneticChickengineering extends JavaPlugin implements SlimefunAddon
         int maxMutation = clamp(1, cfg.getInt("options.max-mutation"), 6, 2);
         boolean displayResources = cfg.getBoolean("options.display-resource-in-name");
 
-        //~ if (cfg.getBoolean("options.auto-update")) {
-        //~ }
+        if (cfg.getBoolean("options.auto-update") && getDescription().getVersion().startsWith("DEV - ")) {
+            new GitHubBuildsUpdater(this, getFile(), "kii-chan-reloaded/GeneticChickengineering/master").start();
+        }
 
-        SlimefunItemStack chickenHead;
         SlimefunItemStack categoryIcon;
 
         try {
@@ -119,8 +120,7 @@ public class GeneticChickengineering extends JavaPlugin implements SlimefunAddon
 
     @Override
     public String getBugTrackerURL() {
-        // You can return a link to your Bug Tracker instead of null here
-        return null;
+        return "https://github.com/kii-chan-reloaded/GeneticChickengineering/issues";
     }
 
     @Override
@@ -136,7 +136,7 @@ public class GeneticChickengineering extends JavaPlugin implements SlimefunAddon
     }
     private int clamp(int low, Object value, int high, int fallback) {
         // Clamps an int between a minimum and maximum value
-        // If value is null, fallback is used instead of value
+        // Value is null, fallback is used instead
         return Math.min(Math.max(low, fallback), high);
     }
 
@@ -154,13 +154,13 @@ public class GeneticChickengineering extends JavaPlugin implements SlimefunAddon
         this.research.addItems(item);
     }
     public void cleanUpDB() {
-        this.log.info("Starting database cleanup");
-        List<World> ws = this.getServer().getWorlds();
         List<String[]> chicks = this.db.getAll();
-        List<String> found = new ArrayList<String>();
         if (chicks.size() == 0) {
             return;
         }
+        List<World> ws = this.getServer().getWorlds();
+        List<String> found = new ArrayList<String>();
+        this.log.info("Starting database cleanup");
         for (int i=0; i<ws.size(); i++) {
             World w = ws.get(i);
             for (int j=0; j<chicks.size(); j++) {
