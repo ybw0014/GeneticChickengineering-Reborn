@@ -117,7 +117,7 @@ public class PocketChicken<T extends LivingEntity> extends SimpleSlimefunItem<It
         if (entity.hasMetadata("gce_pocket_chicken_dna")) {
             dna = new DNA(entity.getMetadata("gce_pocket_chicken_dna").get(0).asString());
             this.plugin.db.delete(uuid);
-        } else if (this.plugin.db.has(uuid) {
+        } else if (this.plugin.db.has(uuid)) {
             dna = new DNA(this.plugin.db.getDNAOrNull(uuid));
         } else {
             dna = new DNA(mutationRate, maxMutation);

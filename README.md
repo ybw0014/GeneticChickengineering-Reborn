@@ -1,7 +1,7 @@
 # Genetic Chickengineering
-This is an original implementation of resource chickens heavily inspired by
-SetyCz's popular Forge mod Chicken. This is a mid- to late-game addon for
-[SlimeFun](https://github.com/Slimefun/Slimefun4).
+Genetic Chickengineering is an original implementation of resource chickens
+heavily inspired by SetyCz's popular Forge mod Chicken. This is a mid- to
+late-game addon for [SlimeFun](https://github.com/Slimefun/Slimefun4).
 The main difference between the two is that while Chicken has a predetermined
 tree of chicken breeding, Genetic Chickengineering uses a very basic simulation
 of genetics to determine chicken progression (meaning you may want to brush up
@@ -31,13 +31,16 @@ homozygous recessive pair of alleles (one set of two lower-case letters) and
 It will begin producing a resource! These can be used with cargo nodes to keep a
 steady, neverending supply of different resources!
 
-See [the sequence table](sequencing.md) to learn how to make specific resources,
-or just start breeding chickens like crazy until you have all 64 varieties!
+See [the sequence table](sequencing.md) or your in-game Slimefun Guide to learn
+how to make specific resources, or just start breeding chickens like crazy until
+you have all 64 varieties!
 
 ## Thanks
 
 None of this would be possible if it weren't for TheBusyBiscuit's hard work on
-Slimefun, as well as the tremendously helpful Developer's Guide.
+Slimefun, as well as the tremendously helpful Developer's Guide. Furthermore, a 
+significant portion of this addon uses similar or identical code from
+MobCapturer, and this project would not have gotten off the ground without it.
 
 ## Issues/Requests
 
