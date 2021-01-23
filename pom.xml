@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>space.kiichan</groupId>
     <artifactId>GeneticChickengineering</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -57,20 +57,52 @@
                 </includes>
             </resource>
         </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.1</version>
+
+                <configuration>
+                    <relocations>
+                        <relocation>
+                            <pattern>io.github.thebusybiscuit.cscorelib2</pattern>
+                            <shadedPattern>space.kiichan.geneticchickengineering.cscorelib2</shadedPattern>
+                        </relocation>
+                    </relocations>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 
     <dependencies>
         <dependency>
             <groupId>com.destroystokyo.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.16.4-R0.1-SNAPSHOT</version>
+            <version>1.16.5-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>com.github.TheBusyBiscuit</groupId>
+            <artifactId>CS-CoreLib2</artifactId>
+            <version>0.29.6</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.TheBusyBiscuit</groupId>
             <artifactId>CS-CoreLib</artifactId>
-            <version>master-SNAPSHOT</version>
+            <version>1.7</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
@@ -87,7 +119,7 @@
         <dependency>
             <groupId>com.github.Slimefun</groupId>
             <artifactId>Slimefun4</artifactId>
-            <version>RC-18</version>
+            <version>RC-19</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
@@ -104,4 +136,5 @@
         </dependency>
 
     </dependencies>
+    
 </project>

@@ -1,5 +1,7 @@
 package space.kiichan.geneticchickengineering.machines;
 
+import io.github.thebusybiscuit.cscorelib2.inventory.InvUtils;
+import io.github.thebusybiscuit.cscorelib2.item.CustomItem;
 import java.util.LinkedList;
 import java.util.List;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
@@ -9,8 +11,6 @@ import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.abstractItems.MachineRecip
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
-import me.mrCookieSlime.Slimefun.cscorelib2.inventory.InvUtils;
-import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -91,7 +91,7 @@ public class PrivateCoop extends AContainer {
 
             Inventory invi = inv.toInventory();
             invi.setMaxStackSize(1);
-            if (!InvUtils.fits(invi, baby, getOutputSlots())) {
+            if (!InvUtils.fitAll(invi, recipe.getOutput(), getOutputSlots())) {
                 return null;
             }
 

@@ -6,7 +6,7 @@ import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.abstractItems.AContainer;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.abstractItems.MachineRecipe;
 import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
-import me.mrCookieSlime.Slimefun.cscorelib2.inventory.InvUtils;
+import io.github.thebusybiscuit.cscorelib2.inventory.InvUtils;
 import org.bukkit.inventory.ItemStack;
 import space.kiichan.geneticchickengineering.GeneticChickengineering;
 import space.kiichan.geneticchickengineering.chickens.PocketChicken;
@@ -49,8 +49,7 @@ public class GeneticSequencer extends AContainer {
                 }
                 ItemStack learnedChick = this.pc.learnDNA(chick);
                 MachineRecipe recipe = new MachineRecipe(30, new ItemStack[] { chick }, new ItemStack[] {learnedChick});
-                // For some reason Maven doesn't believe that MachineRecipes have .getOutput
-                if (!InvUtils.fitAll(inv.toInventory(), new ItemStack[] {learnedChick}, getOutputSlots())) {
+                if (!InvUtils.fitAll(inv.toInventory(), recipe.getOutput(), getOutputSlots())) {
                     continue;
                 }
                 inv.consumeItem(slot, 1);

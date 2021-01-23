@@ -13,7 +13,7 @@ import java.util.UUID;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
-import me.mrCookieSlime.Slimefun.cscorelib2.inventory.ItemUtils;
+import io.github.thebusybiscuit.cscorelib2.inventory.ItemUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -179,6 +179,21 @@ public class PocketChicken<T extends LivingEntity> extends SimpleSlimefunItem<It
         PersistentDataContainer container = chick.getItemMeta().getPersistentDataContainer();
         DNA dna = new DNA(container.get(dnakey, PersistentDataType.INTEGER_ARRAY));
         return dna;
+    }
+
+    public int getDNAStrength(ItemStack chick) {
+        // Returns a number which reflects the number of homozygous dominant
+        // alleles in a chicken. This is used to give a boosted rate to resource
+        // production from chickens which are "pure"
+        DNA dna = this.getDNA(chick);
+        int[] state = dna.getState();
+        int str = 6 - dna.getTier();
+        for (int i=0; i<6; i++) {
+            if (state[i] == 1) {
+                str--;
+            }
+        }
+        return str;
     }
 
     @Override

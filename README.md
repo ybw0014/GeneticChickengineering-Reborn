@@ -1,14 +1,14 @@
 # Genetic Chickengineering
 Genetic Chickengineering is an original implementation of resource chickens
-heavily inspired by SetyCz's popular Forge mod Chicken. This is a mid- to
-late-game addon for [SlimeFun](https://github.com/Slimefun/Slimefun4).
+heavily inspired by SetyCz's popular Forge mod Chicken. 
 The main difference between the two is that while Chicken has a predetermined
 tree of chicken breeding, Genetic Chickengineering uses a very basic simulation
 of genetics to determine chicken progression (meaning you may want to brush up
 on [Punnett squares](https://en.wikipedia.org/wiki/Punnett_square)).
 
-This plugin uses Paper-specific API calls, and as such will not work on Spigot
-servers.
+This is a mid- to late-game addon for
+[SlimeFun](https://github.com/Slimefun/Slimefun4). Furthermore, it uses
+Paper-specific API calls, and as such will not work on Spigot servers.
 
 ## Plugin Basics
 Overworld chickens have almost completely become the dominant, "normal" chickens
@@ -28,8 +28,12 @@ Eventually, your efforts will be rewarded with a special chicken that can
 produce resources! However, they can't do it alone... This is where the
 Excitation Chamber comes into play. Insert a chicken with at least one
 homozygous recessive pair of alleles (one set of two lower-case letters) and
-It will begin producing a resource! These can be used with cargo nodes to keep a
-steady, neverending supply of different resources!
+it will begin producing a resource! Not all chickens of a resource type will
+produce resources at the same rate, though. Due to interference from
+heterozygous allele pairs (one dominant and one recessive), chickens which have
+only homozygous pairs will make resources faster than those with heterozygous
+genes. Add some cargo nodes to the Excitation Chamber to keep a steady,
+neverending supply of different resources!
 
 See [the sequence table](sequencing.md) or your in-game Slimefun Guide to learn
 how to make specific resources, or just start breeding chickens like crazy until

@@ -7,8 +7,8 @@ import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.abstractItems.MachineRecip
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
-import me.mrCookieSlime.Slimefun.cscorelib2.inventory.InvUtils;
-import me.mrCookieSlime.Slimefun.cscorelib2.item.CustomItem;
+import io.github.thebusybiscuit.cscorelib2.inventory.InvUtils;
+import io.github.thebusybiscuit.cscorelib2.item.CustomItem;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
@@ -64,9 +64,21 @@ public class ExcitationChamber extends AContainer {
                     continue;
                 }
                 this.currentResource = this.pc.getResource(chick);
-                MachineRecipe recipe = new MachineRecipe(8+2*this.pc.getResourceTier(chick), new ItemStack[] { chick }, new ItemStack[] {this.currentResource});
-                // For some reason Maven doesn't believe that MachineRecipes have .getOutput
-                if (!InvUtils.fitAll(inv.toInventory(), new ItemStack[] {this.currentResource}, getOutputSlots())) {
+                /* Speed calculation
+                 * All recipes have a base speed of 14
+                 * All recipes add 1 second/DNA tier
+                 * All recipes subtract 2 seconds/DNA strength (dominant pairs)
+                 *  Tier 0: 2-14 sec
+                 *  Tier 1: 5-15 sec
+                 *  Tier 2: 8-16 sec
+                 *  Tier 3: 11-17 sec
+                 *  Tier 4: 14-18 sec
+                 *  Tier 5: 17-19 sec
+                 *  Tier 6: 20 sec
+                 */
+                int speed = 14 + this.pc.getResourceTier(chick) - 2*this.pc.getDNAStrength(chick);
+                MachineRecipe recipe = new MachineRecipe(speed, new ItemStack[] { chick }, new ItemStack[] {this.currentResource});
+                if (!InvUtils.fitAll(inv.toInventory(), recipe.getOutput(), getOutputSlots())) {
                     return null;
                 }
                 return recipe;
