@@ -1,4 +1,7 @@
 # Genetic Chickengineering
+
+![License](https://img.shields.io/github/license/kii-chan-reloaded/GeneticChickengineering) ![Build](https://github.com/kii-chan-reloaded/GeneticChickengineering/workflows/Java%20CI%20with%20Maven/badge.svg)
+
 Genetic Chickengineering is an original implementation of resource chickens
 heavily inspired by SetyCz's popular Forge mod Chicken. 
 The main difference between the two is that while Chicken has a predetermined
