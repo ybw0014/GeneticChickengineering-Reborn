@@ -165,7 +165,6 @@ public class GeneticChickengineering extends JavaPlugin implements SlimefunAddon
         }
         List<World> ws = this.getServer().getWorlds();
         List<String> found = new ArrayList<String>();
-        this.log.info("Starting database cleanup");
         for (int i=0; i<ws.size(); i++) {
             World w = ws.get(i);
             for (int j=0; j<chicks.size(); j++) {
@@ -189,6 +188,8 @@ public class GeneticChickengineering extends JavaPlugin implements SlimefunAddon
             c = c + 1;
         }
         this.db.commit();
-        this.log.info(c+" old records deleted");
+        if (c > 0) {
+            this.log.info(c+" old records deleted from overworld chicken database (did they die?)");
+        }
     }
 }

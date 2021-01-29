@@ -42,6 +42,27 @@ See [the sequence table](sequencing.md) or your in-game Slimefun Guide to learn
 how to make specific resources, or just start breeding chickens like crazy until
 you have all 64 varieties!
 
+## Images
+
+![A basic machine overview](/images/gce_machines.png)
+
+------
+
+![A baby chicken fresh out of the Genetic Sequencer](/images/gce_genseq.png)
+
+------
+
+![An experience chicken working](/images/gce_excham.png)
+
+------
+
+By default, a chicken will display its resource in a custom name after it has
+been passed through a Genetic Sequencer. If the chicken already has a custom
+name, then the resource will be appended to the end of that name. This feature
+can be turned off globally in the plugin's `config.yml`.
+
+![A nether quartz chicken named Crystal](/images/gce_names.png)
+
 ## Thanks
 
 None of this would be possible if it weren't for TheBusyBiscuit's hard work on
