@@ -46,6 +46,11 @@ public class GeneticChickengineering extends JavaPlugin implements SlimefunAddon
     public void onEnable() {
         this.log = this.getLogger();
         this.db = new DBUtil(this.getDataFolder().toString(), this.log);
+        if (!this.db.checkForConnection()) {
+            this.log.severe("Connection to database failed. Aborting initialization.");
+            this.log.severe("Check above for more information about the error.");
+            return;
+        }
         Config cfg = new Config(this);
 
         int mutationRate = clamp(1, cfg.getInt("options.mutation-rate"), 100, 30);
