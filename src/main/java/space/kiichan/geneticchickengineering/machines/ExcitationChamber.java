@@ -1,5 +1,9 @@
 package space.kiichan.geneticchickengineering.machines;
 
+import io.github.thebusybiscuit.cscorelib2.inventory.InvUtils;
+import io.github.thebusybiscuit.cscorelib2.item.CustomItem;
+import java.util.HashMap;
+import java.util.Map;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import me.mrCookieSlime.Slimefun.Objects.Category;
 import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.abstractItems.AContainer;
@@ -7,8 +11,6 @@ import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.abstractItems.MachineRecip
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
-import io.github.thebusybiscuit.cscorelib2.inventory.InvUtils;
-import io.github.thebusybiscuit.cscorelib2.item.CustomItem;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
@@ -19,11 +21,21 @@ public class ExcitationChamber extends AContainer {
     private GeneticChickengineering plugin;
     private final PocketChicken pc;
     private ItemStack currentResource;
+    public static Map<BlockMenu, ItemStack> resources = new HashMap<>();
+    private final ItemStack blackPane = new CustomItem(Material.BLACK_STAINED_GLASS_PANE, " ");
 
     public ExcitationChamber(GeneticChickengineering plugin, Category category, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
         super(category, item, recipeType, recipe);
         this.pc = plugin.pocketChicken;
         this.currentResource = new ItemStack(Material.AIR);
+    }
+
+    private Block setProgressBar(Block b) {
+        // Hacky way to get the progress bar to be the resource without sharing
+        // the progress bar amongst all the excitation chambers
+        BlockMenu inv = BlockStorage.getInventory(b);
+        this.currentResource = this.resources.getOrDefault(inv, this.blackPane);
+        return b;
     }
 
     @Override
@@ -38,15 +50,17 @@ public class ExcitationChamber extends AContainer {
 
     @Override
     protected void tick(Block b) {
-        super.tick(b);
+        super.tick(setProgressBar(b));
+        BlockMenu inv = BlockStorage.getInventory(b);
         if (isProcessing(b)) {
-            BlockMenu inv = BlockStorage.getInventory(b);
             if (this.findNextRecipe(inv) == null) {
                 progress.remove(b);
                 processing.remove(b);
-                inv.replaceExistingItem(22, new CustomItem(Material.BLACK_STAINED_GLASS_PANE, " "));
-                this.currentResource = new ItemStack(Material.AIR);
+                inv.replaceExistingItem(22, this.blackPane);
+                this.resources.remove(inv);
             }
+        } else if (this.resources.containsKey(inv)) {
+            this.resources.remove(inv);
         }
     }
 
@@ -63,7 +77,8 @@ public class ExcitationChamber extends AContainer {
                 if (!this.pc.isAdult(chick)) {
                     continue;
                 }
-                this.currentResource = this.pc.getResource(chick);
+                ItemStack chickResource = this.pc.getResource(chick);
+                this.resources.put(inv, chickResource);
                 /* Speed calculation
                  * All recipes have a base speed of 14
                  * All recipes add 1 second/DNA tier
@@ -77,7 +92,7 @@ public class ExcitationChamber extends AContainer {
                  *  Tier 6: 20 sec
                  */
                 int speed = 14 + this.pc.getResourceTier(chick) - 2*this.pc.getDNAStrength(chick);
-                MachineRecipe recipe = new MachineRecipe(speed, new ItemStack[] { chick }, new ItemStack[] {this.currentResource});
+                MachineRecipe recipe = new MachineRecipe(speed, new ItemStack[] { chick }, new ItemStack[] { chickResource });
                 if (!InvUtils.fitAll(inv.toInventory(), recipe.getOutput(), getOutputSlots())) {
                     return null;
                 }

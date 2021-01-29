@@ -3,7 +3,6 @@ package space.kiichan.geneticchickengineering.chickens;
 import io.github.thebusybiscuit.slimefun4.core.researching.Research;
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
 import org.bukkit.Material;
