@@ -104,9 +104,9 @@ public class GeneticChickengineering extends JavaPlugin implements SlimefunAddon
         registerToAll(lavaEgg);
 
         // Register machines
-        registerToAll(geneticSequencer.setCapacity(180).setEnergyConsumption(6).setProcessingSpeed(1));
-        registerToAll(privateCoop.setCapacity(30).setEnergyConsumption(3).setProcessingSpeed(1));
-        registerToAll(excitationChamber.setCapacity(250).setEnergyConsumption(10).setProcessingSpeed(1));
+        registerToAll(geneticSequencer.setCapacity(180).setEnergyConsumption(3).setProcessingSpeed(1));
+        registerToAll(privateCoop.setCapacity(30).setEnergyConsumption(1).setProcessingSpeed(1));
+        registerToAll(excitationChamber.setCapacity(250).setEnergyConsumption(5).setProcessingSpeed(1));
 
         // Fill all resource chickens into the book
         ChickenTypes.registerChickens(research, this.pocketChicken, fromChicken);
