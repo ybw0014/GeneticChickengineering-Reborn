@@ -6,6 +6,7 @@ import io.github.thebusybiscuit.cscorelib2.updater.GitHubBuildsUpdater;
 import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
 import io.github.thebusybiscuit.slimefun4.core.researching.Research;
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -45,7 +46,11 @@ public class GeneticChickengineering extends JavaPlugin implements SlimefunAddon
     @Override
     public void onEnable() {
         this.log = this.getLogger();
-        this.db = new DBUtil(this.getDataFolder().toString(), this.log);
+        File datadir = this.getDataFolder();
+        if (!datadir.exists()) {
+            datadir.mkdirs();
+        }
+        this.db = new DBUtil(datadir.toString(), this.log);
         if (!this.db.checkForConnection()) {
             this.log.severe("Connection to database failed. Aborting initialization.");
             this.log.severe("Check above for more information about the error.");
