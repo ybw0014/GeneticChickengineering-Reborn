@@ -87,6 +87,10 @@ public class GeneticChickengineering extends JavaPlugin implements SlimefunAddon
             new ItemStack(Material.BLACKSTONE), SlimefunItems.SMALL_CAPACITOR, new ItemStack(Material.BLACKSTONE),
             new ItemStack(Material.CHAIN), null, new ItemStack(Material.CHAIN),
             new ItemStack(Material.STONE), SlimefunItems.ELECTRIC_MOTOR, new ItemStack(Material.STONE)});
+        ExcitationChamber excitationChamber2 = new ExcitationChamber(this, category, GCEItems.EXCITATION_CHAMBER_2, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+            SlimefunItems.LEAD_INGOT, SlimefunItems.BLISTERING_INGOT_3, SlimefunItems.LEAD_INGOT,
+            SlimefunItems.BLISTERING_INGOT_3, GCEItems.EXCITATION_CHAMBER, SlimefunItems.BLISTERING_INGOT_3,
+            SlimefunItems.LEAD_INGOT, SlimefunItems.BLISTERING_INGOT_3, SlimefunItems.LEAD_INGOT});
         PrivateCoop privateCoop = new PrivateCoop(this, category, GCEItems.PRIVATE_COOP, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
             new ItemStack(Material.BIRCH_PLANKS), new ItemStack(Material.BIRCH_PLANKS), new ItemStack(Material.BIRCH_PLANKS),
             new ItemStack(Material.JUKEBOX), new ItemStack(Material.RED_BED), new ItemStack(Material.POPPY),
@@ -107,6 +111,7 @@ public class GeneticChickengineering extends JavaPlugin implements SlimefunAddon
         registerToAll(geneticSequencer.setCapacity(180).setEnergyConsumption(3).setProcessingSpeed(1));
         registerToAll(privateCoop.setCapacity(30).setEnergyConsumption(1).setProcessingSpeed(1));
         registerToAll(excitationChamber.setCapacity(250).setEnergyConsumption(5).setProcessingSpeed(1));
+        registerToAll(excitationChamber2.setCapacity(1000).setEnergyConsumption(10).setProcessingSpeed(2));
 
         // Fill all resource chickens into the book
         ChickenTypes.registerChickens(research, this.pocketChicken, fromChicken);

@@ -83,15 +83,16 @@ public class ExcitationChamber extends AContainer {
                  * All recipes have a base speed of 14
                  * All recipes add 1 second/DNA tier
                  * All recipes subtract 2 seconds/DNA strength (dominant pairs)
-                 *  Tier 0: 2-14 sec
-                 *  Tier 1: 5-15 sec
-                 *  Tier 2: 8-16 sec
-                 *  Tier 3: 11-17 sec
-                 *  Tier 4: 14-18 sec
-                 *  Tier 5: 17-19 sec
-                 *  Tier 6: 20 sec
+                 *         | normal    | boosted
+                 *  Tier 0 | 2-14 sec  | 1-7 sec
+                 *  Tier 1 | 5-15 sec  | 2-7 sec
+                 *  Tier 2 | 8-16 sec  | 4-8 sec
+                 *  Tier 3 | 11-17 sec | 5-8 sec
+                 *  Tier 4 | 14-18 sec | 7-9 sec
+                 *  Tier 5 | 17-19 sec | 8-9 sec
+                 *  Tier 6 | 20 sec    | 10 sec
                  */
-                int speed = 14 + this.pc.getResourceTier(chick) - 2*this.pc.getDNAStrength(chick);
+                int speed = (14 + this.pc.getResourceTier(chick) - 2*this.pc.getDNAStrength(chick)) / getSpeed();
                 MachineRecipe recipe = new MachineRecipe(speed, new ItemStack[] { chick }, new ItemStack[] { chickResource });
                 if (!InvUtils.fitAll(inv.toInventory(), recipe.getOutput(), getOutputSlots())) {
                     return null;
