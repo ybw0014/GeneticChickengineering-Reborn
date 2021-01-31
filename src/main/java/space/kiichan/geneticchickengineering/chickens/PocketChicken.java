@@ -274,7 +274,10 @@ public class PocketChicken<T extends LivingEntity> extends SimpleSlimefunItem<It
     public boolean isAdult(ItemStack chick) {
         PersistentDataContainer container = chick.getItemMeta().getPersistentDataContainer();
         JsonObject json = container.get(adapterkey, (PersistentDataType<String, JsonObject>) adapter);
-        return !json.get("baby").getAsBoolean();
+        if (json != null) {
+            return !json.get("baby").getAsBoolean();
+        }
+        return false;
     }
 
     public boolean isLearned(ItemStack chick) {
