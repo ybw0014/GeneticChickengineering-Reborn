@@ -5,6 +5,7 @@ import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
+import me.mrCookieSlime.Slimefun.Objects.Category;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import space.kiichan.geneticchickengineering.chickens.PocketChicken;
@@ -99,11 +100,10 @@ public final class ChickenTypes {
         return (ItemStack) typemap.get(typing)[1];
     }
 
-    public static final void registerChickens(Research research, PocketChicken pc, RecipeType rt) {
+    public static final void registerChickens(Research research, PocketChicken pc, Category category, RecipeType rt) {
         for (int i=typemap.size()-1; i>-1; i--) {
             Object[] attrs = typemap.get(i);
-            PocketChicken typedPC = pc.fakeVariant(i, (String) attrs[0], rt);
-            research.addItems(typedPC);
+            PocketChicken typedPC = pc.fakeVariant(i, (String) attrs[0], category, rt);
         }
         pc.plugin.log.info("Registered "+typemap.size()+" chickens");
     }

@@ -49,7 +49,7 @@ public class PocketChicken<T extends LivingEntity> extends SimpleSlimefunItem<It
         this.maxMutation = maxMutation;
         this.displayResources = displayResources;
     }
-    public PocketChicken(GeneticChickengineering plugin, Category category, SlimefunItemStack item, int mutationRate, int maxMutation, boolean displayResources, DNA dna, NamespacedKey adapterkey, NamespacedKey dnakey, RecipeType recipeType, ItemStack[] recipe) {
+    public PocketChicken(GeneticChickengineering plugin, Category category, SlimefunItemStack item, int mutationRate, int maxMutation, boolean displayResources, NamespacedKey adapterkey, NamespacedKey dnakey, RecipeType recipeType, ItemStack[] recipe) {
         super(category, item, recipeType, recipe);
         this.plugin = plugin;
         this.adapterkey = adapterkey;
@@ -140,7 +140,7 @@ public class PocketChicken<T extends LivingEntity> extends SimpleSlimefunItem<It
         return item;
     }
 
-    public PocketChicken fakeVariant(int typing, String name, RecipeType rt) {
+    public PocketChicken fakeVariant(int typing, String name, Category category, RecipeType rt) {
         // Returns a chicken variant of the typing
         // Just used for adding the variants to the guide
         ItemStack item = getItem().clone();
@@ -153,9 +153,24 @@ public class PocketChicken<T extends LivingEntity> extends SimpleSlimefunItem<It
         }
         state[6] = 1;
         DNA dna = new DNA(state);
-        SlimefunItemStack fakeitem = GCEItems.makeChicken(ChickenTypes.getName(typing));
-        this.setLore(fakeitem, null, dna);
-        PocketChicken newpc = new PocketChicken(this.plugin, this.getCategory(), fakeitem, this.mutationRate, this.maxMutation, this.displayResources, dna, this.adapterkey, this.dnakey, rt, this.getRecipe());
+        String chickType = ChickenTypes.getName(typing);
+        SlimefunItemStack fakechicken = GCEItems.makeChicken(chickType);
+        this.setLore(fakechicken, null, dna);
+
+        // Use the chicken's resource as the icon
+        SlimefunItemStack fakeicon = GCEItems.makeChickenIcon(chickType, ChickenTypes.getResource(typing));
+        // Since these will be "Pocket Chickens", they will spawn chickens when cheated into a player's inventory
+        // We set the DNA on the icon so that it will spawn a chicken of the correct type
+        ItemMeta meta = fakeicon.getItemMeta();
+        meta.getPersistentDataContainer().set(dnakey, PersistentDataType.INTEGER_ARRAY, dna.getState());
+        fakeicon.setItemMeta(meta);
+        PocketChicken newpc = new PocketChicken(this.plugin, category, fakeicon, this.mutationRate, this.maxMutation, this.displayResources, this.adapterkey, this.dnakey, rt, 
+            new ItemStack[]{
+                null, null, null,
+                null, fakechicken, null,
+                null, null, null
+            }
+        );
         newpc.register(this.plugin);
         return newpc;
     }
