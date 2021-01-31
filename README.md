@@ -14,6 +14,10 @@ This is a mid- to late-game addon for
 Paper-specific API calls, and as such will not work on Spigot servers.
 
 ## Plugin Basics
+*See the*
+[*wiki*](https://github.com/kii-chan-reloaded/GeneticChickengineering/wiki)
+*for more detailed information*
+
 Overworld chickens have almost completely become the dominant, "normal" chickens
 that we know and love today, however there are certain chickens that carry
 latent powers. With the right tools, time, and care, these latent powers may be
@@ -38,9 +42,10 @@ only homozygous pairs will make resources faster than those with heterozygous
 genes. Add some cargo nodes to the Excitation Chamber to keep a steady,
 neverending supply of different resources!
 
-See [the sequence table](sequencing.md) or your in-game Slimefun Guide to learn
-how to make specific resources, or just start breeding chickens like crazy until
-you have all 64 varieties!
+See
+[the sequence table](https://github.com/kii-chan-reloaded/GeneticChickengineering/wiki/Sequencing-Guide)
+or your in-game Slimefun Guide to learn how to make specific resources, or just
+start breeding chickens like crazy until you have all 64 varieties!
 
 ## Images
 
