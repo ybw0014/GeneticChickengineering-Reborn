@@ -144,15 +144,7 @@ public class PocketChicken<T extends LivingEntity> extends SimpleSlimefunItem<It
         // Returns a chicken variant of the typing
         // Just used for adding the variants to the guide
         ItemStack item = getItem().clone();
-        int[] state = new int[7];
-        String typeStr = Integer.toBinaryString(typing);
-        String padded = String.format("%6s", typeStr).replaceAll(" ", "0");
-
-        for (int i=0; i<6; i++) {
-            state[i] = 3*(((int) padded.charAt(i))-((int) '0'));
-        }
-        state[6] = 1;
-        DNA dna = new DNA(state);
+        DNA dna = new DNA(typing);
         String chickType = ChickenTypes.getName(typing);
         SlimefunItemStack fakechicken = GCEItems.makeChicken(chickType);
         this.setLore(fakechicken, null, dna);
@@ -306,7 +298,7 @@ public class PocketChicken<T extends LivingEntity> extends SimpleSlimefunItem<It
         return item;
     }
 
-    private void setLore(ItemStack item, JsonObject json, DNA dna) {
+    public void setLore(ItemStack item, JsonObject json, DNA dna) {
         ItemMeta meta = item.getItemMeta();
         meta.getPersistentDataContainer().set(dnakey, PersistentDataType.INTEGER_ARRAY, dna.getState());
         if (json != null) {

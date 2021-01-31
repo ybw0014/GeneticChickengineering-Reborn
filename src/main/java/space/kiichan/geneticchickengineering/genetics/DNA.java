@@ -29,6 +29,17 @@ public class DNA {
         this.learned = (boolean) boolcast[Character.getNumericValue(statechars[6])];
     }
 
+    public DNA(int typing) {
+        this.sequence = new gene[6];
+        String typeStr = Integer.toBinaryString(typing);
+        String padded = String.format("%6s", typeStr).replaceAll(" ", "0");
+
+        for (int i=0; i<6; i++) {
+            this.sequence[i] = new gene(alleles[i], 3*(((int) padded.charAt(i))-((int) '0')));
+        }
+        this.learned = true;
+    }
+
     public DNA(char[] half1, char[] half2) {
         // New DNA from two parent halves
         this.sequence = new gene[6];

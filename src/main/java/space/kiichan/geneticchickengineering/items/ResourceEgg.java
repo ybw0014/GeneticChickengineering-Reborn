@@ -13,12 +13,27 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 import space.kiichan.geneticchickengineering.GeneticChickengineering;
+import space.kiichan.geneticchickengineering.genetics.DNA;
+import space.kiichan.geneticchickengineering.items.GCEItems;
 
 public class ResourceEgg extends SimpleSlimefunItem<ItemUseHandler> implements NotPlaceable {
     private Material resource;
+
     public ResourceEgg(GeneticChickengineering plugin, Category category, SlimefunItemStack item, Material resource, RecipeType recipeType) {
-        super(category, item, recipeType, new ItemStack[] {null, null, null, null, null, null, null, null, null});
+        super(category, item, recipeType, new ItemStack[] {null, null, null, null, makeFakeChicken(plugin, resource), null, null, null, null});
         this.resource = resource;
+    }
+
+    private static ItemStack makeFakeChicken (GeneticChickengineering plugin, Material resource) {
+        ItemStack fake = GCEItems.POCKET_CHICKEN.clone();
+        DNA dna;
+        if (resource == Material.WATER) {
+            dna = new DNA(62);
+        } else {
+            dna = new DNA(41);
+        }
+        plugin.pocketChicken.setLore(fake, null, dna);
+        return fake;
     }
 
     @Override
