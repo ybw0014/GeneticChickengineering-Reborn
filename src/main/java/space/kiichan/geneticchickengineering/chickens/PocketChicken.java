@@ -230,18 +230,20 @@ public class PocketChicken<T extends LivingEntity> extends SimpleSlimefunItem<It
                 if (e.getPlayer().getGameMode() != GameMode.CREATIVE) {
                     ItemUtils.consumeItem(e.getItem(), false);
                 }
-                if (json != null) {
-                    if (this.displayResources && dna.isKnown()) {
-                        json.addProperty("_customNameVisible", true);
-                        String name = "("+ChickenTypes.getName(dna.getTyping())+")";
+                if (this.displayResources && dna.isKnown()) {
+                    String name = "("+ChickenTypes.getName(dna.getTyping())+")";
+                    if (json != null) {
                         if (!json.get("_customName").isJsonNull()) {
                             name = json.get("_customName").getAsString() + " " + name;
                         }
+                        json.addProperty("_customNameVisible", true);
                         json.addProperty("_customName",name);
+                        adapter.apply(entity, json);
+                    } else {
+                        entity.setCustomName(name);
+                        entity.setCustomNameVisible​(true);
                     }
-                    adapter.apply(entity, json);
                 }
-
             }
         };
     }
