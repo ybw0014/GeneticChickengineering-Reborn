@@ -65,18 +65,7 @@ public class GeneticChickengineering extends JavaPlugin implements SlimefunAddon
         boolean displayResources = cfg.getBoolean("options.display-resource-in-name");
 
         if (cfg.getBoolean("options.auto-update") && getDescription().getVersion().startsWith("DEV - ")) {
-            if (new Date().before(new Date(1612504800))) {
-                new GitHubBuildsUpdater(this, getFile(), "kii-chan-reloaded/GeneticChickengineering/master").start();
-                this.log.warning(
-                    "Automatic updates will be disabled Fri Feb 5 00:00:00 2021 UTC for the v1.1.0 release. "+
-                    "See https://github.com/kii-chan-reloaded/GeneticChickengineering/milestone/1 for more information."
-                );
-            } else {
-                this.log.severe(
-                    "Automatic updates are disabled! "+
-                    "See https://github.com/kii-chan-reloaded/GeneticChickengineering/milestone/1 for more information."
-                );
-            }
+            new GitHubBuildsUpdater(this, getFile(), "kii-chan-reloaded/GeneticChickengineering/master").start();
         }
 
         SlimefunItemStack chickenIcon = new SlimefunItemStack("GCE_ICON", "1638469a599ceef7207537603248a9ab11ff591fd378bea4735b346a7fae893", "&eGenetic Chickengineering", "", "&a> Click to open");
