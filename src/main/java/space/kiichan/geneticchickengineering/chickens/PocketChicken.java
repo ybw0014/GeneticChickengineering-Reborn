@@ -114,6 +114,7 @@ public class PocketChicken<T extends LivingEntity> extends SimpleSlimefunItem<It
             dna = new DNA(entity.getMetadata("gce_pocket_chicken_dna").get(0).asString());
             this.plugin.db.delete(uuid);
         } else if (this.plugin.db.has(uuid)) {
+            // Checked if the UUID existed first, so null won't be returned
             dna = new DNA(this.plugin.db.getDNAOrNull(uuid));
         } else {
             dna = new DNA(mutationRate, maxMutation);
@@ -140,22 +141,26 @@ public class PocketChicken<T extends LivingEntity> extends SimpleSlimefunItem<It
         return item;
     }
 
-    public PocketChicken fakeVariant(int typing, String name, Category category, RecipeType rt) {
+    public void fakeVariant(int typing, String name, Category category, RecipeType rt) {
         // Returns a chicken variant of the typing
         // Just used for adding the variants to the guide
-        ItemStack item = getItem().clone();
+
+        // Make a Pocket Chicken for the "recipe" 
+        ItemStack fakechicken = getItem().clone();
         DNA dna = new DNA(typing);
         String chickType = ChickenTypes.getName(typing);
-        SlimefunItemStack fakechicken = GCEItems.makeChicken(chickType);
         this.setLore(fakechicken, null, dna);
 
         // Use the chicken's resource as the icon
-        SlimefunItemStack fakeicon = GCEItems.makeChickenIcon(chickType, ChickenTypes.getResource(typing));
+        String itemIDType = chickType.replace(" ","_").toUpperCase();
+        SlimefunItemStack fakeicon = new SlimefunItemStack("GCE_"+itemIDType+"_CHICKEN_ICON", ChickenTypes.getResource(typing));
         // Since these will be "Pocket Chickens", they will spawn chickens when cheated into a player's inventory
         // We set the DNA on the icon so that it will spawn a chicken of the correct type
         ItemMeta meta = fakeicon.getItemMeta();
         meta.getPersistentDataContainer().set(dnakey, PersistentDataType.INTEGER_ARRAY, dna.getState());
         fakeicon.setItemMeta(meta);
+
+        // Make the fake chicken variant and return it
         PocketChicken newpc = new PocketChicken(this.plugin, category, fakeicon, this.mutationRate, this.maxMutation, this.displayResources, this.adapterkey, this.dnakey, rt, 
             new ItemStack[]{
                 null, null, null,
@@ -164,7 +169,6 @@ public class PocketChicken<T extends LivingEntity> extends SimpleSlimefunItem<It
             }
         );
         newpc.register(this.plugin);
-        return newpc;
     }
 
     public ItemStack fromDNA(DNA dna) {
@@ -213,7 +217,13 @@ public class PocketChicken<T extends LivingEntity> extends SimpleSlimefunItem<It
 
                 PersistentDataContainer container = e.getItem().getItemMeta().getPersistentDataContainer();
                 JsonObject json = container.get(adapterkey, (PersistentDataType<String, JsonObject>) adapter);
-                DNA dna = new DNA(container.get(dnakey, PersistentDataType.INTEGER_ARRAY));
+                int[] dnaState = container.get(dnakey, PersistentDataType.INTEGER_ARRAY);
+                DNA dna;
+                if (dnaState != null) {
+                    dna = new DNA(dnaState);
+                } else {
+                    dna = new DNA(mutationRate, maxMutation);
+                }
 
                 String dss = dna.getStateString();
                 entity.setMetadata("gce_pocket_chicken_dna", new FixedMetadataValue(plugin, dss));
@@ -222,19 +232,19 @@ public class PocketChicken<T extends LivingEntity> extends SimpleSlimefunItem<It
                 if (e.getPlayer().getGameMode() != GameMode.CREATIVE) {
                     ItemUtils.consumeItem(e.getItem(), false);
                 }
-                if (this.displayResources && dna.isKnown()) {
-                    String name = "("+ChickenTypes.getName(dna.getTyping())+")";
-                    if (json != null) {
+                String name = "("+ChickenTypes.getName(dna.getTyping())+")";
+                if (json != null) {
+                    if (this.displayResources && dna.isKnown()) {
                         if (!json.get("_customName").isJsonNull()) {
                             name = json.get("_customName").getAsString() + " " + name;
                         }
                         json.addProperty("_customNameVisible", true);
                         json.addProperty("_customName",name);
                         adapter.apply(entity, json);
-                    } else {
-                        entity.setCustomName(name);
-                        entity.setCustomNameVisible​(true);
                     }
+                } else if (this.displayResources && dna.isKnown()) {
+                    entity.setCustomName(name);
+                    entity.setCustomNameVisible​(true);
                 }
             }
         };

@@ -103,7 +103,7 @@ public final class ChickenTypes {
     public static final void registerChickens(Research research, PocketChicken pc, Category category, RecipeType rt) {
         for (int i=typemap.size()-1; i>-1; i--) {
             Object[] attrs = typemap.get(i);
-            PocketChicken typedPC = pc.fakeVariant(i, (String) attrs[0], category, rt);
+            pc.fakeVariant(i, (String) attrs[0], category, rt);
         }
         pc.plugin.log.info("Registered "+typemap.size()+" chickens");
     }
