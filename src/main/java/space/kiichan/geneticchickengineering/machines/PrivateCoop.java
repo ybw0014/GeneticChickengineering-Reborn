@@ -27,6 +27,7 @@ public class PrivateCoop extends AContainer {
 
     public PrivateCoop(GeneticChickengineering plugin, Category category, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
         super(category, item, recipeType, recipe);
+        this.plugin = plugin;
         this.pc = plugin.pocketChicken;
     }
 

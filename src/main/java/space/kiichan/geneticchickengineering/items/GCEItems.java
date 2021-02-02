@@ -20,4 +20,5 @@ public final class GCEItems {
     public static final SlimefunItemStack EXCITATION_CHAMBER_2 = new SlimefunItemStack("GCE_EXCITATION_CHAMBER_2", new ItemStack(Material.BLAST_FURNACE), "§eBoosted Excitation Chamber", "§r§7§oEnables chickens to produce a resource,", "§r§7§obut faster", LoreBuilder.machine(MachineTier.END_GAME, MachineType.MACHINE), LoreBuilder.powerPerSecond(15));
     public static final SlimefunItemStack PRIVATE_COOP = new SlimefunItemStack("GCE_PRIVATE_COOP", new ItemStack(Material.BEEHIVE), "§ePrivate Coop", "§r§7§oBig enough for two...", LoreBuilder.machine(MachineTier.MEDIUM, MachineType.MACHINE), LoreBuilder.powerPerSecond(2));
 
+    public static final SlimefunItemStack UPDATE_WARNING = new SlimefunItemStack("GCE_UPDATE_WARNING", new ItemStack(Material.BARRIER), "§cUpdate Warning", "§fImprovements to this machine", "§fwill cause all items in it", "§fto be lost in GCE v1.1.0.", "§eEmpty this machine before", "§eupdating to v1.1.0!", "§7See GitHub for more information");
 }

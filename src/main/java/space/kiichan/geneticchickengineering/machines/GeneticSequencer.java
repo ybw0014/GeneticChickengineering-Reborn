@@ -18,6 +18,7 @@ public class GeneticSequencer extends AContainer {
 
     public GeneticSequencer(GeneticChickengineering plugin, Category category, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
         super(category, item, recipeType, recipe);
+        this.plugin = plugin;
         this.pc = plugin.pocketChicken;
     }
 

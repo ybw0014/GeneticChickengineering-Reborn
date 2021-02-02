@@ -1,7 +1,10 @@
 package space.kiichan.geneticchickengineering.machines;
 
+import io.github.thebusybiscuit.cscorelib2.inventory.ClickAction;
 import io.github.thebusybiscuit.cscorelib2.inventory.InvUtils;
+import io.github.thebusybiscuit.cscorelib2.inventory.MenuClickHandler;
 import io.github.thebusybiscuit.cscorelib2.item.CustomItem;
+import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
 import java.util.HashMap;
 import java.util.Map;
 import me.mrCookieSlime.Slimefun.Lists.RecipeType;
@@ -11,11 +14,14 @@ import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.abstractItems.MachineRecip
 import me.mrCookieSlime.Slimefun.api.BlockStorage;
 import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
+import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 import space.kiichan.geneticchickengineering.GeneticChickengineering;
 import space.kiichan.geneticchickengineering.chickens.PocketChicken;
+import space.kiichan.geneticchickengineering.items.GCEItems;
 
 public class ExcitationChamber extends AContainer {
     private GeneticChickengineering plugin;
@@ -26,11 +32,12 @@ public class ExcitationChamber extends AContainer {
 
     public ExcitationChamber(GeneticChickengineering plugin, Category category, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
         super(category, item, recipeType, recipe);
+        this.plugin = plugin;
         this.pc = plugin.pocketChicken;
         this.currentResource = new ItemStack(Material.AIR);
     }
 
-    private Block setProgressBar(Block b) {
+    private Block initBlock(Block b) {
         // Hacky way to get the progress bar to be the resource without sharing
         // the progress bar amongst all the excitation chambers
         BlockMenu inv = BlockStorage.getInventory(b);
@@ -49,8 +56,41 @@ public class ExcitationChamber extends AContainer {
     }
 
     @Override
+    public int[] getInputSlots() {
+        return new int[] { 19, 20 };
+    }
+
+    @Override
+    public int[] getOutputSlots() {
+        return new int[] { 24, 25 };
+    }
+
+    protected void constructMenu(BlockMenuPreset preset) {
+        for (int i : new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 13, 31, 36, 37, 38, 39, 41, 42, 43, 44 }) {
+            preset.addItem(i, ChestMenuUtils.getBackground(), ChestMenuUtils.getEmptyClickHandler());
+        }
+
+        for (int i : new int[] { 9, 10, 11, 12, 18, 21, 27, 28, 29, 30 }) {
+            preset.addItem(i, ChestMenuUtils.getInputSlotTexture(), ChestMenuUtils.getEmptyClickHandler());
+        }
+
+        for (int i : new int[] { 14, 15, 16, 17, 23, 26, 32, 33, 34, 35 }) {
+            preset.addItem(i, ChestMenuUtils.getOutputSlotTexture(), ChestMenuUtils.getEmptyClickHandler());
+        }
+
+        preset.addItem(22, new CustomItem(Material.BLACK_STAINED_GLASS_PANE, " "), ChestMenuUtils.getEmptyClickHandler());
+        preset.addItem(40, GCEItems.UPDATE_WARNING, ChestMenuUtils.getEmptyClickHandler());
+
+        for (int i : getOutputSlots()) {
+            preset.addMenuClickHandler(i, (player, slot, cursor, action) -> {
+                return cursor != null && cursor.getType() != null && cursor.getType() != Material.AIR;
+            });
+        }
+    }
+
+    @Override
     protected void tick(Block b) {
-        super.tick(setProgressBar(b));
+        super.tick(this.initBlock(b));
         BlockMenu inv = BlockStorage.getInventory(b);
         if (isProcessing(b)) {
             if (this.findNextRecipe(inv) == null) {
