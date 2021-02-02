@@ -57,29 +57,28 @@ public class ExcitationChamber extends AContainer {
 
     @Override
     public int[] getInputSlots() {
-        return new int[] { 19, 20 };
+        return new int[] { 4 };
     }
 
     @Override
     public int[] getOutputSlots() {
-        return new int[] { 24, 25 };
+        return new int[] { 37, 38, 39, 40, 41, 42, 43 };
     }
 
     protected void constructMenu(BlockMenuPreset preset) {
-        for (int i : new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 13, 31, 36, 37, 38, 39, 41, 42, 43, 44 }) {
+        for (int i : new int[] { 0, 1, 2, 6, 7, 8, 9, 10, 11, 15, 16, 17, 18, 19, 20, 21, 23, 24, 25, 26 }) {
             preset.addItem(i, ChestMenuUtils.getBackground(), ChestMenuUtils.getEmptyClickHandler());
         }
 
-        for (int i : new int[] { 9, 10, 11, 12, 18, 21, 27, 28, 29, 30 }) {
+        for (int i : new int[] { 3, 5, 12, 13, 14 }) {
             preset.addItem(i, ChestMenuUtils.getInputSlotTexture(), ChestMenuUtils.getEmptyClickHandler());
         }
 
-        for (int i : new int[] { 14, 15, 16, 17, 23, 26, 32, 33, 34, 35 }) {
+        for (int i : new int[] { 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 44 }) {
             preset.addItem(i, ChestMenuUtils.getOutputSlotTexture(), ChestMenuUtils.getEmptyClickHandler());
         }
 
         preset.addItem(22, new CustomItem(Material.BLACK_STAINED_GLASS_PANE, " "), ChestMenuUtils.getEmptyClickHandler());
-        preset.addItem(40, GCEItems.UPDATE_WARNING, ChestMenuUtils.getEmptyClickHandler());
 
         for (int i : getOutputSlots()) {
             preset.addMenuClickHandler(i, (player, slot, cursor, action) -> {
