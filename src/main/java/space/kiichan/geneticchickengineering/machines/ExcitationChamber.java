@@ -29,12 +29,16 @@ public class ExcitationChamber extends AContainer {
     private ItemStack currentResource;
     public static Map<BlockMenu, ItemStack> resources = new HashMap<>();
     private final ItemStack blackPane = new CustomItem(Material.BLACK_STAINED_GLASS_PANE, " ");
+    private int failRate;
+    private int baseTime;
 
-    public ExcitationChamber(GeneticChickengineering plugin, Category category, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
+    public ExcitationChamber(GeneticChickengineering plugin, Category category, SlimefunItemStack item, int failRate, int baseTime, RecipeType recipeType, ItemStack[] recipe) {
         super(category, item, recipeType, recipe);
         this.plugin = plugin;
         this.pc = plugin.pocketChicken;
         this.currentResource = new ItemStack(Material.AIR);
+        this.failRate = failRate;
+        this.baseTime = baseTime;
     }
 
     private Block initBlock(Block b) {
@@ -116,10 +120,19 @@ public class ExcitationChamber extends AContainer {
                 if (!this.pc.isAdult(chick)) {
                     continue;
                 }
-                ItemStack chickResource = this.pc.getResource(chick);
-                this.resources.put(inv, chickResource);
+                // Set the progress bar to always be the resource, since players
+                // can abort the recipe if they know the egg is coming
+                ItemStack resourceIcon = this.pc.getResource(chick);
+                this.resources.put(inv, resourceIcon);
+
+                ItemStack chickResource;
+                if (Math.random()*100 < this.failRate) {
+                    chickResource = new ItemStack(Material.EGG);
+                } else {
+                    chickResource = this.pc.getResource(chick);
+                }
                 /* Speed calculation
-                 * All recipes have a base speed of 14
+                 * All recipes have a base speed of 14 (by default)
                  * All recipes add 1 second/DNA tier
                  * All recipes subtract 2 seconds/DNA strength (dominant pairs)
                  *         | normal    | boosted
@@ -131,7 +144,7 @@ public class ExcitationChamber extends AContainer {
                  *  Tier 5 | 17-19 sec | 8-9 sec
                  *  Tier 6 | 20 sec    | 10 sec
                  */
-                int speed = (14 + this.pc.getResourceTier(chick) - 2*this.pc.getDNAStrength(chick)) / getSpeed();
+                int speed = (this.baseTime + this.pc.getResourceTier(chick) - 2*this.pc.getDNAStrength(chick)) / getSpeed();
                 MachineRecipe recipe = new MachineRecipe(speed, new ItemStack[] { chick }, new ItemStack[] { chickResource });
                 if (!InvUtils.fitAll(inv.toInventory(), recipe.getOutput(), getOutputSlots())) {
                     return null;

@@ -62,6 +62,8 @@ public class GeneticChickengineering extends JavaPlugin implements SlimefunAddon
 
         int mutationRate = clamp(1, cfg.getInt("options.mutation-rate"), 100, 30);
         int maxMutation = clamp(1, cfg.getInt("options.max-mutation"), 6, 2);
+        int resFailRate = clamp(0, cfg.getInt("options.resource-fail-rate"), 100, 0);
+        int resBaseTime = clamp(14, cfg.getInt("options.resource-base-time"), 100, 14);
         boolean displayResources = cfg.getBoolean("options.display-resource-in-name");
 
         if (cfg.getBoolean("options.auto-update") && getDescription().getVersion().startsWith("DEV - ")) {
@@ -86,11 +88,11 @@ public class GeneticChickengineering extends JavaPlugin implements SlimefunAddon
             new ItemStack(Material.OAK_PLANKS), null, new ItemStack(Material.OAK_PLANKS),
             new ItemStack(Material.COBBLESTONE), new ItemStack(Material.OBSERVER), new ItemStack(Material.COBBLESTONE),
             new ItemStack(Material.COBBLESTONE), SlimefunItems.ADVANCED_CIRCUIT_BOARD, new ItemStack(Material.COBBLESTONE)});
-        ExcitationChamber excitationChamber = new ExcitationChamber(this, category, GCEItems.EXCITATION_CHAMBER, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        ExcitationChamber excitationChamber = new ExcitationChamber(this, category, GCEItems.EXCITATION_CHAMBER, resFailRate, resBaseTime, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
             new ItemStack(Material.BLACKSTONE), SlimefunItems.SMALL_CAPACITOR, new ItemStack(Material.BLACKSTONE),
             new ItemStack(Material.CHAIN), null, new ItemStack(Material.CHAIN),
             new ItemStack(Material.STONE), SlimefunItems.ELECTRIC_MOTOR, new ItemStack(Material.STONE)});
-        ExcitationChamber excitationChamber2 = new ExcitationChamber(this, category, GCEItems.EXCITATION_CHAMBER_2, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+        ExcitationChamber excitationChamber2 = new ExcitationChamber(this, category, GCEItems.EXCITATION_CHAMBER_2, resFailRate, resBaseTime, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
             SlimefunItems.LEAD_INGOT, SlimefunItems.BLISTERING_INGOT_3, SlimefunItems.LEAD_INGOT,
             SlimefunItems.BLISTERING_INGOT_3, GCEItems.EXCITATION_CHAMBER, SlimefunItems.BLISTERING_INGOT_3,
             SlimefunItems.LEAD_INGOT, SlimefunItems.BLISTERING_INGOT_3, SlimefunItems.LEAD_INGOT});

@@ -6,3 +6,7 @@ options:
   max-mutation: 2
   # The percent chance that a newly converted chicken will have any recessive alleles
   mutation-rate: 50
+  # The percent chance that a chicken will produce an egg instead of a resource
+  resource-fail-rate: 0
+  # The base time for resource generation, from 14-100
+  resource-base-time: 14
