@@ -6,6 +6,7 @@ import io.github.thebusybiscuit.cscorelib2.updater.GitHubBuildsUpdater;
 import io.github.thebusybiscuit.slimefun4.api.SlimefunAddon;
 import io.github.thebusybiscuit.slimefun4.core.researching.Research;
 import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
+import io.papermc.lib.PaperLib;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
@@ -48,6 +49,13 @@ public class GeneticChickengineering extends JavaPlugin implements SlimefunAddon
     @Override
     public void onEnable() {
         this.log = this.getLogger();
+        
+        if (!PaperLib.isPaper()) {
+            this.log.severe("GCE must be run on a Paper server because it uses Paper-specific API calls.");
+            this.log.severe("This server doesn't appear understand Paper API, so GCE will be disabled.");
+            return;
+        }
+        
         File datadir = this.getDataFolder();
         if (!datadir.exists()) {
             datadir.mkdirs();

@@ -69,6 +69,10 @@
                             <pattern>io.github.thebusybiscuit.cscorelib2</pattern>
                             <shadedPattern>space.kiichan.geneticchickengineering.cscorelib2</shadedPattern>
                         </relocation>
+                        <relocation>
+                            <pattern>io.papermc.lib</pattern>
+                            <shadedPattern>space.kiichan.geneticchickengineering.paperlib</shadedPattern>
+                        </relocation>
                     </relocations>
                 </configuration>
 
@@ -113,9 +117,16 @@
         </dependency>
 
         <dependency>
-          <groupId>org.xerial</groupId>
-          <artifactId>sqlite-jdbc</artifactId>
-          <version>3.34.0</version>
+            <groupId>org.xerial</groupId>
+            <artifactId>sqlite-jdbc</artifactId>
+            <version>3.34.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.papermc</groupId>
+            <artifactId>paperlib</artifactId>
+            <version>1.0.6</version>
+            <scope>compile</scope>
         </dependency>
 
     </dependencies>
