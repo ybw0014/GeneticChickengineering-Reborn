@@ -27,6 +27,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.World;
 import space.kiichan.geneticchickengineering.chickens.ChickenTypes;
 import space.kiichan.geneticchickengineering.chickens.PocketChicken;
+import space.kiichan.geneticchickengineering.commands.Commands;
 import space.kiichan.geneticchickengineering.database.DBUtil;
 import space.kiichan.geneticchickengineering.items.ChickenNet;
 import space.kiichan.geneticchickengineering.items.GCEItems;
@@ -133,6 +134,10 @@ public class GeneticChickengineering extends JavaPlugin implements SlimefunAddon
         // Register listener to clean up database on world save
         new WorldSavedListener(this);
 
+        if (cfg.getBoolean("commands.enabled")) {
+            // Register commands
+            new Commands(this, cfg);
+        }
     }
 
     @Override

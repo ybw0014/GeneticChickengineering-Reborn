@@ -6,7 +6,7 @@ import space.kiichan.geneticchickengineering.genetics.gene;
 
 public class DNA {
     private gene[] sequence;
-    final private char[] alleles = new char[]{'b','c','d','f','s','w'};
+    final static private char[] alleles = new char[]{'b','c','d','f','s','w'};
     final private boolean[] boolcast = new boolean[]{false, true};
     private boolean learned;
 
@@ -47,6 +47,15 @@ public class DNA {
             this.sequence[i] = new gene(new char[]{half1[i], half2[i]});
         }
         this.learned = false;
+    }
+
+    public DNA(char[] notation) {
+        // New DNA from notation, should be 12 long and only contain alleles
+        this.sequence = new gene[6];
+        for (int i=0; i<6; i++) {
+            this.sequence[i] = new gene(new char[]{notation[2*i], notation[2*i+1]});
+        }
+        this.learned = true;
     }
 
     public DNA(double mutationRate, int maxMutation) {
@@ -90,6 +99,14 @@ public class DNA {
         return out;
     }
 
+    public gene[] getGenes() {
+        return this.sequence;
+    }
+
+    public gene getGene(int index) {
+        return this.sequence[index];
+    }
+
     public int[] getState() {
         int[] out = new int[7];
         for (int i=0; i<6; i++) {
@@ -130,6 +147,28 @@ public class DNA {
             }
         }
         return out;
+    }
+
+    public static char[] getAlleles() {
+        return alleles;
+    }
+
+    public static boolean isValidSequence(String seq) {
+        return isValidSequence(seq.toCharArray());
+    }
+
+    public static boolean isValidSequence(char[] seq) {
+        if (seq.length != 12) {
+            return false;
+        }
+        for (int i=0; i<6; i++) {
+            char allele = alleles[i];
+            if (Character.toLowerCase(seq[2*i]) != allele ||
+                Character.toLowerCase(seq[2*i+1]) != allele) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public boolean isKnown() {

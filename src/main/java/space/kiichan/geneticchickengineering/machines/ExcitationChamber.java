@@ -36,7 +36,7 @@ public class ExcitationChamber extends AContainer {
         super(category, item, recipeType, recipe);
         this.plugin = plugin;
         this.pc = plugin.pocketChicken;
-        this.currentResource = new ItemStack(Material.AIR);
+        this.currentResource = this.blackPane.clone();
         this.failRate = failRate;
         this.baseTime = baseTime;
     }

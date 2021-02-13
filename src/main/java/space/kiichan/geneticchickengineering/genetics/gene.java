@@ -38,6 +38,14 @@ public class gene {
         return getState() > 0;
     }
 
+    public boolean isHeterozygous() {
+        return alleles[0] == alleles[1];
+    }
+
+    public char[] getAlleles() {
+        return this.alleles;
+    }
+
     public char split() {
         int ix = 0;
         if (Math.random() > 0.5) {

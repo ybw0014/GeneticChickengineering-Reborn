@@ -13,3 +13,16 @@ depend: [Slimefun]
 version: ${project.version}
 
 api-version: 1.16
+
+commands:
+    geneticchickengineering:
+        aliases: gce
+        description: GCE base command
+        usage: "Usage: /<command> <subcommand> [arguments]"
+permissions:
+  geneticchickengineering.command.makechicken:
+    description: Allows a player to make Pocket Chickens with commands
+    default: op
+  geneticchickengineering.command.calculatechance:
+    description: Allows a player to calculate the chances of getting a specific offspring from two parents
+    default: true

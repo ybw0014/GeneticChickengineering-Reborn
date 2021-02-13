@@ -10,3 +10,15 @@ options:
   resource-fail-rate: 0
   # The base time for resource generation, from 14-100
   resource-base-time: 14
+commands:
+  # Should commands be enabled
+  enabled: true
+  subcommands:
+    makechicken:
+      # Should this command be enabled
+      enabled: true
+      # What permissions are necessary for this command
+      permission: geneticchickengineering.command.makechicken
+    calculatechance:
+      enabled: true
+      permission: geneticchickengineering.command.calculatechance
