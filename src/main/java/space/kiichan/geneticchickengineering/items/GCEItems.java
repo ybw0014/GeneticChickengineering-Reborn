@@ -19,5 +19,6 @@ public final class GCEItems {
     public static final SlimefunItemStack EXCITATION_CHAMBER = new SlimefunItemStack("GCE_EXCITATION_CHAMBER", new ItemStack(Material.BLAST_FURNACE), "§eExcitation Chamber", "§r§7§oEnables chickens to produce a resource", LoreBuilder.machine(MachineTier.MEDIUM, MachineType.MACHINE), LoreBuilder.powerPerSecond(10));
     public static final SlimefunItemStack EXCITATION_CHAMBER_2 = new SlimefunItemStack("GCE_EXCITATION_CHAMBER_2", new ItemStack(Material.BLAST_FURNACE), "§eBoosted Excitation Chamber", "§r§7§oEnables chickens to produce a resource,", "§r§7§obut faster", LoreBuilder.machine(MachineTier.END_GAME, MachineType.MACHINE), LoreBuilder.powerPerSecond(15));
     public static final SlimefunItemStack PRIVATE_COOP = new SlimefunItemStack("GCE_PRIVATE_COOP", new ItemStack(Material.BEEHIVE), "§ePrivate Coop", "§r§7§oBig enough for two...", LoreBuilder.machine(MachineTier.MEDIUM, MachineType.MACHINE), LoreBuilder.powerPerSecond(2));
+    public static final SlimefunItemStack RESTORATION_CHAMBER = new SlimefunItemStack("GCE_RESTORATION_CHAMBER", new ItemStack(Material.PINK_SHULKER_BOX), "§eRestoration Chamber", "§r§7§oHeals Pocket Chickens", LoreBuilder.machine(MachineTier.MEDIUM, MachineType.MACHINE), LoreBuilder.powerPerSecond(4));
 
 }

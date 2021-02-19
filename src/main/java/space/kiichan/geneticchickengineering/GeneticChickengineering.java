@@ -36,12 +36,16 @@ import space.kiichan.geneticchickengineering.listeners.WorldSavedListener;
 import space.kiichan.geneticchickengineering.machines.ExcitationChamber;
 import space.kiichan.geneticchickengineering.machines.GeneticSequencer;
 import space.kiichan.geneticchickengineering.machines.PrivateCoop;
+import space.kiichan.geneticchickengineering.machines.RestorationChamber;
 
 public class GeneticChickengineering extends JavaPlugin implements SlimefunAddon {
 
     private final NamespacedKey categoryId = new NamespacedKey(this, "genetic_chickengineering");
     private final NamespacedKey chickenDirectoryId = new NamespacedKey(this, "genetic_chickengineering_chickens");
-    private final NamespacedKey dnakey = new NamespacedKey(this, "gce_pocket_chicken_dna");;
+    private final NamespacedKey dnakey = new NamespacedKey(this, "gce_pocket_chicken_dna");
+    private boolean doPain;
+    private boolean painKills;
+    private double painChance;
     public PocketChicken pocketChicken;
     private Research research;
     public DBUtil db;
@@ -69,13 +73,16 @@ public class GeneticChickengineering extends JavaPlugin implements SlimefunAddon
         }
         Config cfg = new Config(this);
 
-        int mutationRate = clamp(1, cfg.getInt("options.mutation-rate"), 100, 30);
-        int maxMutation = clamp(1, cfg.getInt("options.max-mutation"), 6, 2);
-        int resFailRate = clamp(0, cfg.getInt("options.resource-fail-rate"), 100, 0);
-        int resBaseTime = clamp(14, cfg.getInt("options.resource-base-time"), 100, 14);
-        boolean displayResources = cfg.getBoolean("options.display-resource-in-name");
+        int mutationRate = clamp(1, cfg.getOrSetDefault("options.mutation-rate", 30), 100);
+        int maxMutation = clamp(1, cfg.getOrSetDefault("options.max-mutation", 2), 6);
+        int resFailRate = clamp(0, cfg.getOrSetDefault("options.resource-fail-rate", 0), 100);
+        int resBaseTime = clamp(14, cfg.getOrSetDefault("options.resource-base-time", 14), 100);
+        boolean displayResources = cfg.getOrSetDefault("options.display-resource-in-name", true);
+        this.doPain = cfg.getOrSetDefault("options.enable-pain", false);
+        this.painKills = cfg.getOrSetDefault("options.pain-kills", false);
+        this.painChance = clamp(0d, cfg.getDouble("options.pain-chance"), 100d);
 
-        if (cfg.getBoolean("options.auto-update") && getDescription().getVersion().startsWith("DEV - ")) {
+        if (cfg.getOrSetDefault("options.auto-update", false) && getDescription().getVersion().startsWith("DEV - ")) {
             new GitHubBuildsUpdater(this, getFile(), "kii-chan-reloaded/GeneticChickengineering/master").start();
         }
 
@@ -126,6 +133,14 @@ public class GeneticChickengineering extends JavaPlugin implements SlimefunAddon
         registerToAll(privateCoop.setCapacity(30).setEnergyConsumption(1).setProcessingSpeed(1));
         registerToAll(excitationChamber.setCapacity(250).setEnergyConsumption(5).setProcessingSpeed(1));
         registerToAll(excitationChamber2.setCapacity(1000).setEnergyConsumption(10).setProcessingSpeed(2));
+        if (this.doPain) {
+            int healRate = this.clamp(1, cfg.getOrSetDefault("options.heal-rate", 2), 120);
+            RestorationChamber restorationChamber = new RestorationChamber(this, category, healRate, GCEItems.RESTORATION_CHAMBER, RecipeType.ENHANCED_CRAFTING_TABLE, new ItemStack[]{
+                new ItemStack(Material.PINK_TERRACOTTA), new ItemStack(Material.PINK_TERRACOTTA), new ItemStack(Material.PINK_TERRACOTTA),
+                SlimefunItems.BANDAGE, new ItemStack(Material.WHITE_BED), SlimefunItems.MEDICINE,
+                new ItemStack(Material.PINK_TERRACOTTA), SlimefunItems.HEATING_COIL, new ItemStack(Material.PINK_TERRACOTTA)});
+            registerToAll(restorationChamber.setCapacity(30).setEnergyConsumption(2).setProcessingSpeed(1));
+        }
 
         // Fill all resource chickens into the book
         ChickenTypes.registerChickens(research, this.pocketChicken, chickDir, fromChicken);
@@ -134,7 +149,7 @@ public class GeneticChickengineering extends JavaPlugin implements SlimefunAddon
         // Register listener to clean up database on world save
         new WorldSavedListener(this);
 
-        if (cfg.getBoolean("commands.enabled")) {
+        if (cfg.getOrSetDefault("commands.enabled", true)) {
             // Register commands
             new Commands(this, cfg);
         }
@@ -157,15 +172,12 @@ public class GeneticChickengineering extends JavaPlugin implements SlimefunAddon
     }
 
 
-    private int clamp(int low, int value, int high, int fallback) {
-        // Clamps an int between a minimum and maximum value
-        // Fallback is unused
+    private int clamp(int low, int value, int high) {
         return Math.min(Math.max(low, value), high);
     }
-    private int clamp(int low, Object value, int high, int fallback) {
-        // Clamps an int between a minimum and maximum value
-        // Value is null, fallback is used instead
-        return Math.min(Math.max(low, fallback), high);
+
+    private double clamp(double low, double value, double high) {
+        return Math.min(Math.max(low, value), high);
     }
 
     public ItemStack convert(Chicken chick) {
@@ -213,6 +225,35 @@ public class GeneticChickengineering extends JavaPlugin implements SlimefunAddon
         this.db.commit();
         if (c > 0) {
             this.log.info(c+" old records deleted from overworld chicken database (did they die?)");
+        }
+    }
+
+    public boolean painEnabled() {
+        return this.doPain;
+    }
+
+    public boolean deathEnabled() {
+        return this.painKills;
+    }
+
+    public boolean survivesPain(ItemStack chick) {
+        return this.pocketChicken.getHealth(chick) > 0.25;
+    }
+
+    public boolean harm(ItemStack chick) {
+        return this.pocketChicken.harm(chick, 0.25);
+    }
+
+    public boolean heal(ItemStack chick, double amount) {
+        if (amount > 0) {
+            amount = amount * -1;
+        }
+        return this.pocketChicken.harm(chick, amount);
+    }
+
+    public void possiblyHarm(ItemStack chick) {
+        if (Math.random()*100 < this.painChance) {
+            this.harm(chick);
         }
     }
 }

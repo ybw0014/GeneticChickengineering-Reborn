@@ -1,6 +1,7 @@
 package space.kiichan.geneticchickengineering.machines;
 
 import io.github.thebusybiscuit.cscorelib2.inventory.InvUtils;
+import io.github.thebusybiscuit.cscorelib2.inventory.ItemUtils;
 import io.github.thebusybiscuit.cscorelib2.item.CustomItem;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,6 +15,7 @@ import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -94,6 +96,20 @@ public class PrivateCoop extends AContainer {
             invi.setMaxStackSize(1);
             if (!InvUtils.fitAll(invi, recipe.getOutput(), getOutputSlots())) {
                 return null;
+            }
+
+            if (this.plugin.painEnabled()) {
+                for (ItemStack parent: parents) {
+                    if (!this.plugin.survivesPain(parent) && !this.plugin.deathEnabled()) {
+                        return null;
+                    }
+                    this.plugin.possiblyHarm(parent);
+                    if (this.pc.getHealth(parent) == 0d) {
+                        ItemUtils.consumeItem(parent, false);
+                        inv.getBlock().getWorld().playSound(inv.getLocation(), Sound.ENTITY_CHICKEN_DEATH, 1f, 1f);
+                        return null;
+                    }
+                }
             }
 
             return recipe;

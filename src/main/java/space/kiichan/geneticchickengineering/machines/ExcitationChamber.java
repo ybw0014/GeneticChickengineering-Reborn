@@ -2,6 +2,7 @@ package space.kiichan.geneticchickengineering.machines;
 
 import io.github.thebusybiscuit.cscorelib2.inventory.ClickAction;
 import io.github.thebusybiscuit.cscorelib2.inventory.InvUtils;
+import io.github.thebusybiscuit.cscorelib2.inventory.ItemUtils;
 import io.github.thebusybiscuit.cscorelib2.inventory.MenuClickHandler;
 import io.github.thebusybiscuit.cscorelib2.item.CustomItem;
 import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
@@ -16,6 +17,7 @@ import me.mrCookieSlime.Slimefun.api.SlimefunItemStack;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
@@ -123,7 +125,6 @@ public class ExcitationChamber extends AContainer {
                 // Set the progress bar to always be the resource, since players
                 // can abort the recipe if they know the egg is coming
                 ItemStack resourceIcon = this.pc.getResource(chick);
-                this.resources.put(inv, resourceIcon);
 
                 ItemStack chickResource;
                 if (Math.random()*100 < this.failRate) {
@@ -147,8 +148,22 @@ public class ExcitationChamber extends AContainer {
                 int speed = (this.baseTime + this.pc.getResourceTier(chick) - 2*this.pc.getDNAStrength(chick)) / getSpeed();
                 MachineRecipe recipe = new MachineRecipe(speed, new ItemStack[] { chick }, new ItemStack[] { chickResource });
                 if (!InvUtils.fitAll(inv.toInventory(), recipe.getOutput(), getOutputSlots())) {
-                    return null;
+                    continue;
                 }
+                
+                if (this.plugin.painEnabled()) {
+                    if (!this.plugin.survivesPain(chick) && !this.plugin.deathEnabled()) {
+                        continue;
+                    }
+                    this.plugin.possiblyHarm(chick);
+                    if (this.pc.getHealth(chick) == 0d) {
+                        ItemUtils.consumeItem(chick, false);
+                        inv.getBlock().getWorld().playSound(inv.getLocation(), Sound.ENTITY_CHICKEN_DEATH, 1f, 1f);
+                        continue;
+                    }
+                }
+
+                this.resources.put(inv, resourceIcon);
                 return recipe;
             }
         }

@@ -203,6 +203,18 @@ public class PocketChicken<T extends LivingEntity> extends SimpleSlimefunItem<It
         return str;
     }
 
+    public double getHealth(ItemStack chick) {
+        if (chick == null) {
+            return 0d;
+        }
+        PersistentDataContainer container = chick.getItemMeta().getPersistentDataContainer();
+        JsonObject json = container.get(adapterkey, (PersistentDataType<String, JsonObject>) adapter);
+        if (json != null) {
+            return json.get("_health").getAsDouble();
+        }
+        return 0d;
+    }
+
     @Override
     public ItemUseHandler getItemHandler() {
         return e -> {
@@ -254,6 +266,18 @@ public class PocketChicken<T extends LivingEntity> extends SimpleSlimefunItem<It
         List<String> lore = new LinkedList<>();
         if (json != null) {
             lore = adapter.getLore(json);
+            if (this.plugin.painEnabled()) {
+                double health = json.get("_health").getAsDouble();
+                String status = ChatColor.GOLD + "Status: ";
+                if (health > 2.0) {
+                    status = status + ChatColor.GREEN + "Healthy";
+                } else if (health <= 0.50) {
+                    status = status + ChatColor.RED + "Exhausted";
+                } else {
+                    status = status + ChatColor.YELLOW + "Fatigued";
+                }
+                lore.add(status);
+            }
         }
         if (dna.isKnown()) {
             String chicktype = ChickenTypes.getName(dna.getTyping());
@@ -273,6 +297,23 @@ public class PocketChicken<T extends LivingEntity> extends SimpleSlimefunItem<It
         // which represents the difficulty of obtaining this chicken
         DNA dna = this.getDNA(chick);
         return dna.getTier();
+    }
+
+    public boolean harm(ItemStack chick, double amount) {
+        if (chick == null) {
+            return false;
+        }
+        PersistentDataContainer container = chick.getItemMeta().getPersistentDataContainer();
+        JsonObject json = container.get(adapterkey, (PersistentDataType<String, JsonObject>) adapter);
+        if (json != null) {
+            double oldhealth = json.get("_health").getAsDouble();
+            double newhealth = Math.max(0d, Math.min(oldhealth - amount, 4d));
+            // Adding existing properties overwrites them
+            json.addProperty("_health", newhealth);
+            this.setLore(chick, json, this.getDNA(chick));
+            return true;
+        }
+        return false;
     }
 
     public boolean isAdult(ItemStack chick) {
