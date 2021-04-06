@@ -20,6 +20,8 @@ options:
   pain-kills: false
   # The time it should take the Restoration Chamber to restore 0.25 of a chicken's health
   heal-rate: 2
+  # Should Water Eggs be able to be used in Nether environments
+  allow-nether-water: false
 commands:
   # Should commands be enabled
   enabled: true
