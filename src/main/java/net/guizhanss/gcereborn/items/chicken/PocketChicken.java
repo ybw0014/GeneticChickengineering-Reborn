@@ -2,6 +2,8 @@ package net.guizhanss.gcereborn.items.chicken;
 
 import java.util.Optional;
 
+import javax.annotation.Nonnull;
+
 import com.google.gson.JsonObject;
 
 import org.bukkit.GameMode;
@@ -35,6 +37,7 @@ public class PocketChicken extends SimpleSlimefunItem<ItemUseHandler> implements
     }
 
     @Override
+    @Nonnull
     public ItemUseHandler getItemHandler() {
         return e -> {
             e.cancel();

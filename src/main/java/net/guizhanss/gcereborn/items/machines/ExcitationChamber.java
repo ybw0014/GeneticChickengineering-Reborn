@@ -61,7 +61,8 @@ public class ExcitationChamber extends AbstractMachine {
         return new int[] { 37, 38, 39, 40, 41, 42, 43 };
     }
 
-    protected void constructMenu(BlockMenuPreset preset) {
+    @Override
+    protected void constructMenu(@Nonnull BlockMenuPreset preset) {
         for (int i : new int[] { 0, 1, 2, 6, 7, 8, 9, 10, 11, 15, 16, 17, 18, 19, 20, 21, 23, 24, 25, 26 }) {
             preset.addItem(i, ChestMenuUtils.getBackground(), ChestMenuUtils.getEmptyClickHandler());
         }

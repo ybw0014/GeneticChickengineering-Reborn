@@ -12,7 +12,7 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public final class Groups {
-    public static ItemGroup MAIN = new ItemGroup(
+    public static final ItemGroup MAIN = new ItemGroup(
         Keys.get("genetic_chickengineering"),
         GeneticChickengineering.getLocalization().getItemGroupItem(
             "ICON",
@@ -20,7 +20,7 @@ public final class Groups {
         )
     );
 
-    public static ItemGroup DICTIONARY = new ItemGroup(
+    public static final ItemGroup DICTIONARY = new ItemGroup(
         Keys.get("genetic_chickengineering_chickens"),
         GeneticChickengineering.getLocalization().getItemGroupItem(
             "DIRECTORY_ICON",
