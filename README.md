@@ -1,6 +1,11 @@
-# Genetic Chickengineering
+# Genetic Chickengineering Reborn
 
-![License](https://img.shields.io/github/license/kii-chan-reloaded/GeneticChickengineering) ![Build](https://github.com/kii-chan-reloaded/GeneticChickengineering/workflows/Java%20CI%20with%20Maven/badge.svg)
+Rewritten by ybw0014.
+
+![License](https://img.shields.io/github/license/ybw0014/GeneticChickengineering-Reborn) 
+
+
+## Overview
 
 Genetic Chickengineering is an original implementation of resource chickens
 heavily inspired by SetyCz's popular Forge mod Chicken. 
@@ -10,7 +15,7 @@ of genetics to determine chicken progression (meaning you may want to brush up
 on [Punnett squares](https://en.wikipedia.org/wiki/Punnett_square)).
 
 This is a mid- to late-game addon for
-[SlimeFun](https://github.com/Slimefun/Slimefun4). Furthermore, it uses
+[Slimefun](https://github.com/Slimefun/Slimefun4). Furthermore, it uses
 Paper-specific API calls, and as such will not work on Spigot servers.
 
 ## Plugin Basics
@@ -75,8 +80,15 @@ Slimefun, as well as the tremendously helpful Developer's Guide. Furthermore, a
 significant portion of this addon uses similar or identical code from
 MobCapturer, and this project would not have gotten off the ground without it.
 
+For this reborn version, I (ybw0014) would like to thank the following people:
+
+- @kii-chan-reloaded (for the original plugin)
+- @xMikux (Traditional Chinese translation)
+- @LobbyTech-MC (Simplified Chinese translation)
+- @zimzaza4 (Make it compatible with Slimefun RC-27+)
+- @CrispyXYZ (current maintainer for Simplified Chinese version, added Ultimate Exciation Chamber)
+
 ## Issues/Requests
 
 If you have any issues or feature requests, feel free to open an issue about it.
-If you're experiencing bugs, please provide any relevent server logs in your
-issue.
+If you're experiencing bugs, please provide any relevent server logs in your issue.

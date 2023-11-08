@@ -1,0 +1,163 @@
+package net.guizhanss.gcereborn.items.machines;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
+
+import javax.annotation.Nonnull;
+
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.block.Block;
+import org.bukkit.inventory.ItemStack;
+
+import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
+import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
+import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
+import io.github.thebusybiscuit.slimefun4.core.machines.MachineProcessor;
+import io.github.thebusybiscuit.slimefun4.implementation.operations.CraftingOperation;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.inventory.InvUtils;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.items.ItemUtils;
+import io.github.thebusybiscuit.slimefun4.utils.ChestMenuUtils;
+
+import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.abstractItems.MachineRecipe;
+import me.mrCookieSlime.Slimefun.api.BlockStorage;
+import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
+import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
+
+import net.guizhanss.gcereborn.GeneticChickengineering;
+import net.guizhanss.gcereborn.utils.GuiItems;
+import net.guizhanss.gcereborn.utils.PocketChickenUtils;
+
+public class ExcitationChamber extends AbstractMachine {
+    private static final Map<BlockMenu, ItemStack> RESOURCES = new HashMap<>();
+    private ItemStack currentResource;
+
+    public ExcitationChamber(ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
+        super(itemGroup, item, recipeType, recipe);
+    }
+
+    @Nonnull
+    private Block initBlock(@Nonnull Block b) {
+        // Hacky way to get the progress bar to be the resource without sharing
+        // the progress bar amongst all the excitation chambers
+        BlockMenu inv = BlockStorage.getInventory(b);
+        currentResource = RESOURCES.getOrDefault(inv, GuiItems.BLACK_PANE);
+        return b;
+    }
+
+    @Override
+    public ItemStack getProgressBar() {
+        return currentResource;
+    }
+
+    @Override
+    public int[] getInputSlots() {
+        return new int[] { 4 };
+    }
+
+    @Override
+    public int[] getOutputSlots() {
+        return new int[] { 37, 38, 39, 40, 41, 42, 43 };
+    }
+
+    protected void constructMenu(BlockMenuPreset preset) {
+        for (int i : new int[] { 0, 1, 2, 6, 7, 8, 9, 10, 11, 15, 16, 17, 18, 19, 20, 21, 23, 24, 25, 26 }) {
+            preset.addItem(i, ChestMenuUtils.getBackground(), ChestMenuUtils.getEmptyClickHandler());
+        }
+
+        for (int i : new int[] { 3, 5, 12, 13, 14 }) {
+            preset.addItem(i, ChestMenuUtils.getInputSlotTexture(), ChestMenuUtils.getEmptyClickHandler());
+        }
+
+        for (int i : new int[] { 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 44 }) {
+            preset.addItem(i, ChestMenuUtils.getOutputSlotTexture(), ChestMenuUtils.getEmptyClickHandler());
+        }
+
+        preset.addItem(22, GuiItems.BLACK_PANE, ChestMenuUtils.getEmptyClickHandler());
+
+        for (int i : getOutputSlots()) {
+            preset.addMenuClickHandler(i, (p, slot, cursor, action) -> cursor != null && !cursor.getType().isAir());
+        }
+    }
+
+    @Override
+    protected void tick(Block b) {
+        super.tick(this.initBlock(b));
+        BlockMenu inv = BlockStorage.getInventory(b);
+        MachineProcessor<CraftingOperation> processor = getMachineProcessor();
+        if (processor.getOperation(b) != null) {
+            if (this.findNextRecipe(inv) == null) {
+                processor.endOperation(b);
+                inv.replaceExistingItem(22, GuiItems.BLACK_PANE);
+                RESOURCES.remove(inv);
+            }
+        } else {
+            RESOURCES.remove(inv);
+        }
+    }
+
+    @Override
+    protected MachineRecipe findNextRecipe(BlockMenu menu) {
+        var config = GeneticChickengineering.getConfigService();
+        for (int slot : getInputSlots()) {
+            ItemStack chicken = menu.getItemInSlot(slot);
+
+            if (!PocketChickenUtils.isPocketChicken(chicken) || !PocketChickenUtils.isAdult(chicken)) {
+                continue;
+            }
+
+            // Set the progress bar to always be the resource, since players
+            // can abort the recipe if they know the egg is coming
+            ItemStack resourceIcon = PocketChickenUtils.getResource(chicken);
+
+            ItemStack chickResource;
+            if (ThreadLocalRandom.current().nextInt(100) < config.getResourceFailRate()) {
+                chickResource = new ItemStack(Material.EGG);
+            } else {
+                chickResource = resourceIcon.clone();
+            }
+
+            /* Speed calculation
+             * All recipes have a base speed of 14 (by default)
+             * All recipes add 1 second/DNA tier
+             * All recipes subtract 2 seconds/DNA strength (dominant pairs)
+             *         | normal    | boosted
+             *  Tier 0 | 2-14 sec  | 1-7 sec
+             *  Tier 1 | 5-15 sec  | 2-7 sec
+             *  Tier 2 | 8-16 sec  | 4-8 sec
+             *  Tier 3 | 11-17 sec | 5-8 sec
+             *  Tier 4 | 14-18 sec | 7-9 sec
+             *  Tier 5 | 17-19 sec | 8-9 sec
+             *  Tier 6 | 20 sec    | 10 sec
+             */
+            int speed = (config.getResourceBaseTime() + PocketChickenUtils.getResourceTier(chicken) - 2 * PocketChickenUtils.getDNAStrength(chicken)) / getSpeed();
+            MachineRecipe recipe = new MachineRecipe(
+                speed,
+                new ItemStack[] { chicken },
+                new ItemStack[] { chickResource }
+            );
+            if (!InvUtils.fitAll(menu.toInventory(), recipe.getOutput(), getOutputSlots())) {
+                continue;
+            }
+
+            if (config.isPainEnabled()) {
+                if (!PocketChickenUtils.survivesPain(chicken) && !config.isPainDeathEnabled()) {
+                    continue;
+                }
+                PocketChickenUtils.possiblyHarm(chicken);
+                if (PocketChickenUtils.getHealth(chicken) <= 0d) {
+                    ItemUtils.consumeItem(chicken, false);
+                    menu.getBlock().getWorld().playSound(menu.getLocation(), Sound.ENTITY_CHICKEN_DEATH, 1f, 1f);
+                    continue;
+                }
+            }
+
+            RESOURCES.put(menu, resourceIcon);
+            return recipe;
+        }
+
+        return null;
+    }
+
+}

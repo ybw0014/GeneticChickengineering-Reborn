@@ -1,19 +1,14 @@
 name: GeneticChickengineering
-
-author: kiichan
-
-description: An addon for SlimeFun that adds resource chickens
-
-main: space.kiichan.geneticchickengineering.GeneticChickengineering
-
-website: https://github.com/kii-chan-reloaded/GeneticChickengineering
-
-depend: [Slimefun]
-
+author: kiichan, ybw0014
+description: An addon for SlimeFun that adds resource chickens, rewritten by ybw0014.
+main: net.guizhanss.gcereborn.GeneticChickengineering
+website: https://github.com/ybw0014/GeneticChickengineering-Reborn
 version: ${project.version}
-
 api-version: 1.16
-
+depend:
+  - Slimefun
+softdepend:
+  - GuizhanLibPlugin
 commands:
     geneticchickengineering:
         aliases: gce
@@ -21,8 +16,8 @@ commands:
         usage: "Usage: /<command> <subcommand> [arguments]"
 permissions:
   geneticchickengineering.command.makechicken:
-    description: Allows a player to make Pocket Chickens with commands
+    description: Allows a player to make Pocket Chickens from command
     default: op
-  geneticchickengineering.command.calculatechance:
+  geneticchickengineering.command.calcchance:
     description: Allows a player to calculate the chances of getting a specific offspring from two parents
     default: true

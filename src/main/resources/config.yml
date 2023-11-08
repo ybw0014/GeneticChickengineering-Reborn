@@ -1,36 +1,46 @@
 options:
+  # Enable auto update.
   auto-update: true
-  # Should custom names be used to show resources
+  # Display debug messages.
+  debug: false
+  # Language of this plugin.
+  # Available languages: https://github.com/ybw0014/GeneticChickengineering-Reborn/tree/master/LOCALES.md
+  lang: en-US
+  # Should the product be shown in the chicken's custom name.
+  # This may conflict with any other plugin that modifies the chicken's custom name.
   display-resource-in-name: true
-  # The max number of heterozygous genes a newly converted chicken can generate, from 1-6
+  # The max number of heterozygous genes a newly converted chicken can generate.
+  # Default: 2, Range: 1 ~ 6
   max-mutation: 2
-  # The percent chance that a newly converted chicken will have any recessive alleles
-  mutation-rate: 50
-  # The percent chance that a chicken will produce an egg instead of a resource
+  # The percent chance that a newly captured chicken will have any recessive alleles.
+  # Default: 30, Range: 1 ~ 100
+  mutation-rate: 30
+  # The percent chance that a chicken will produce an egg instead of a resource.
+  # Default: 0, Range: 0 ~ 100
   resource-fail-rate: 0
-  # The base time for resource generation, from 14-100
+  # The base time for resource generation.
+  # Default: 14, Range: 14 ~ 100
   resource-base-time: 14
-  # Should the machines hurt the chickens (This enables the Restoration Chamber)
+  # Should the machines hurt the chickens.
+  # This enables the Restoration Chamber.
   enable-pain: false
   # The percent chance that a chicken will be hurt by a machine (other than the Restoration Chamber)
   # This check happens once every 0.5 seconds, so low values will be best here
-  # The default, 2% will give chickens an average of 6 minutes before exhausted
+  # The default, 2% will give chickens an average of 6 minutes before exhausted.
+  # Default: 2, Range: 0 ~ 100, allows decimals
   pain-chance: 2
   # Does a chicken die if too hurt (otherwise prevents machine from working)
   pain-kills: false
   # The time it should take the Restoration Chamber to restore 0.25 of a chicken's health
   heal-rate: 2
-  # Should Water Eggs be able to be used in Nether environments
+  # Should Water Eggs be able to be used in Nether
   allow-nether-water: false
 commands:
-  # Should commands be enabled
   enabled: true
   subcommands:
     makechicken:
-      # Should this command be enabled
       enabled: true
-      # What permissions are necessary for this command
       permission: geneticchickengineering.command.makechicken
-    calculatechance:
+    calcchance:
       enabled: true
-      permission: geneticchickengineering.command.calculatechance
+      permission: geneticchickengineering.command.calcchance
