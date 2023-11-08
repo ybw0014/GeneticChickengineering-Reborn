@@ -15,6 +15,6 @@ public final class RecipeTypes {
     );
     public static final RecipeType FROM_CHICKEN = GeneticChickengineering.getLocalization().getRecipeType(
         "from_chicken",
-        GCEItems.CHICKEN_NET
+        GCEItems.EXCITATION_CHAMBER
     );
 }
