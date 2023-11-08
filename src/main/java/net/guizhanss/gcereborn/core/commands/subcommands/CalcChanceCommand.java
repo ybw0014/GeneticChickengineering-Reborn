@@ -14,7 +14,8 @@ import net.guizhanss.gcereborn.core.genetics.Gene;
 
 public class CalcChanceCommand extends DnaSubCommand {
     public CalcChanceCommand() {
-        super("calcchance", false, "geneticchickengineering.command.calcchance", "<parent DNA> <parent DNA> <child DNA>");
+        super("calcchance", false, "geneticchickengineering.command.calcchance",
+            "<parent1DNA> <parent2DNA> <childDNA>");
     }
 
     @Override
@@ -64,7 +65,7 @@ public class CalcChanceCommand extends DnaSubCommand {
     @ParametersAreNonnullByDefault
     public List<String> onTabComplete(CommandSender sender, String[] args) {
         List<String> result = new LinkedList<>();
-        if (args.length > 0 && args.length < 4) {
+        if (args.length > 0 && args.length <= 4) {
             result = findDNA(args[args.length - 1]);
         }
         return result;
