@@ -15,6 +15,7 @@ public final class ConfigurationService {
 
     private boolean autoUpdate;
     private boolean debug;
+    private boolean test;
     private String lang;
     private boolean displayResources;
     private int maxMutation;
@@ -38,6 +39,7 @@ public final class ConfigurationService {
 
         autoUpdate = config.getBoolean("options.auto-update", true);
         debug = config.getBoolean("options.debug", false);
+        test = config.getBoolean("options.test", false);
         lang = config.getString("options.language", "en-US");
         displayResources = config.getBoolean("options.display-resource-in-name", true);
         maxMutation = config.getInt("options.max-mutation", 1, 2, 6);

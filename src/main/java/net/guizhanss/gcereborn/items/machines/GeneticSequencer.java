@@ -48,7 +48,7 @@ public class GeneticSequencer extends AbstractMachine {
                 PocketChickenUtils.possiblyHarm(learnedChicken);
             }
             MachineRecipe recipe = new MachineRecipe(
-                30,
+                config.isTest() ? 1 : 30,
                 new ItemStack[] { chicken },
                 new ItemStack[] { learnedChicken }
             );

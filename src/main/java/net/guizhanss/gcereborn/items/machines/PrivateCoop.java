@@ -77,6 +77,7 @@ public class PrivateCoop extends AbstractMachine {
 
     @Override
     protected MachineRecipe findNextRecipe(BlockMenu menu) {
+        var config = GeneticChickengineering.getConfigService();
         List<ItemStack> parents = this.getParents(menu);
         if (parents.size() == 2) {
             ItemStack baby = PocketChickenUtils.breed(parents.get(0), parents.get(1));
@@ -85,7 +86,7 @@ public class PrivateCoop extends AbstractMachine {
                 return null;
             }
             MachineRecipe recipe = new MachineRecipe(
-                60,
+                config.isTest() ? 1 : 60,
                 new ItemStack[] { parents.get(0), parents.get(1) },
                 new ItemStack[] { baby }
             );

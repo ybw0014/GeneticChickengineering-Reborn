@@ -34,6 +34,7 @@ public class RestorationChamber extends AbstractMachine {
     @Override
     @Nullable
     protected MachineRecipe findNextRecipe(@Nonnull BlockMenu menu) {
+        var config = GeneticChickengineering.getConfigService();
         ItemStack chicken = null;
         ItemStack seed = null;
         for (int slot : getInputSlots()) {
@@ -71,7 +72,7 @@ public class RestorationChamber extends AbstractMachine {
         PocketChickenUtils.heal(recipeChick, toConsume * 0.25);
         var healRate = GeneticChickengineering.getConfigService().getHealRate();
         MachineRecipe recipe = new MachineRecipe(
-            healRate * toConsume,
+            config.isTest() ? 1 : healRate * toConsume,
             new ItemStack[] { recipeSeeds, chicken.clone() },
             new ItemStack[] { recipeChick }
         );

@@ -133,7 +133,7 @@ public class ExcitationChamber extends AbstractMachine {
              */
             int speed = (config.getResourceBaseTime() + PocketChickenUtils.getResourceTier(chicken) - 2 * PocketChickenUtils.getDNAStrength(chicken)) / getSpeed();
             MachineRecipe recipe = new MachineRecipe(
-                speed,
+                config.isTest() ? 1 : speed,
                 new ItemStack[] { chicken },
                 new ItemStack[] { chickResource }
             );
