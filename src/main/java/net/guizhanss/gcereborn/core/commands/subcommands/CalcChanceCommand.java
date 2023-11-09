@@ -1,6 +1,5 @@
 package net.guizhanss.gcereborn.core.commands.subcommands;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -9,10 +8,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import net.guizhanss.gcereborn.GeneticChickengineering;
+import net.guizhanss.gcereborn.core.commands.SubCommand;
 import net.guizhanss.gcereborn.core.genetics.DNA;
 import net.guizhanss.gcereborn.core.genetics.Gene;
 
-public class CalcChanceCommand extends DnaSubCommand {
+public class CalcChanceCommand extends SubCommand implements DnaCompletion {
     public CalcChanceCommand() {
         super("calcchance", false, "geneticchickengineering.command.calcchance",
             "<parent1DNA> <parent2DNA> <childDNA>");
@@ -31,7 +31,7 @@ public class CalcChanceCommand extends DnaSubCommand {
 
         String[] notations = new String[3];
         for (int i = 0; i < 3; i++) {
-            notations[i] = args[i];
+            notations[i] = args[i + 1];
             if (!DNA.isValidSequence(notations[i])) {
                 GeneticChickengineering.getLocalization().sendMessage(sender, "invalid-dna-notation", notations[i]);
                 return;
@@ -64,10 +64,6 @@ public class CalcChanceCommand extends DnaSubCommand {
     @Override
     @ParametersAreNonnullByDefault
     public List<String> onTabComplete(CommandSender sender, String[] args) {
-        List<String> result = new LinkedList<>();
-        if (args.length > 0 && args.length <= 4) {
-            result = findDNA(args[args.length - 1]);
-        }
-        return result;
+        return tabComplete(sender, args, 1, 2, 3);
     }
 }
