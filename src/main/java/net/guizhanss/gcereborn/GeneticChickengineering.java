@@ -1,6 +1,7 @@
 package net.guizhanss.gcereborn;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.logging.Level;
 
 import javax.annotation.Nonnull;
@@ -8,7 +9,9 @@ import javax.annotation.Nonnull;
 import com.google.common.base.Preconditions;
 
 import org.bukkit.command.PluginCommand;
+import org.bukkit.plugin.Plugin;
 
+import io.github.thebusybiscuit.slimefun4.libraries.dough.updater.GitHubBuildsUpdater;
 import io.github.thebusybiscuit.slimefun4.libraries.paperlib.PaperLib;
 
 import net.guizhanss.gcereborn.core.commands.GCECommand;
@@ -20,6 +23,9 @@ import net.guizhanss.gcereborn.listeners.WorldSavedListener;
 import net.guizhanss.gcereborn.setup.Items;
 import net.guizhanss.gcereborn.setup.Researches;
 import net.guizhanss.guizhanlib.slimefun.addon.AbstractAddon;
+import net.guizhanss.guizhanlib.updater.GuizhanBuildsUpdater;
+
+import org.bstats.bukkit.Metrics;
 
 public class GeneticChickengineering extends AbstractAddon {
 
@@ -124,6 +130,8 @@ public class GeneticChickengineering extends AbstractAddon {
                 command.setTabCompleter(new GCECompleter(gceCommand));
             }
         }
+
+        setupMetrics();
     }
 
     @Override
@@ -131,6 +139,28 @@ public class GeneticChickengineering extends AbstractAddon {
         if (dbService != null) {
             dbService.cleanup();
             dbService.shutdown();
+        }
+    }
+
+    private void setupMetrics() {
+        new Metrics(this, 20243);
+    }
+
+    @Override
+    protected void autoUpdate() {
+        if (getPluginVersion().startsWith("DEV")) {
+            String path = getGithubUser() + "/" + getGithubRepo() + "/" + getGithubBranch();
+            new GitHubBuildsUpdater(this, getFile(), path).start();
+        } else if (getPluginVersion().startsWith("Build")) {
+            try {
+                // use updater in lib plugin
+                Class<?> clazz = Class.forName("net.guizhanss.guizhanlibplugin.updater.GuizhanUpdater");
+                Method updaterStart = clazz.getDeclaredMethod("start", Plugin.class, File.class, String.class, String.class, String.class);
+                updaterStart.invoke(null, this, getFile(), getGithubUser(), getGithubRepo(), getGithubBranch());
+            } catch (Exception ignored) {
+                // use updater in lib
+                new GuizhanBuildsUpdater(this, getFile(), getGithubUser(), getGithubRepo(), getGithubBranch()).start();
+            }
         }
     }
 }

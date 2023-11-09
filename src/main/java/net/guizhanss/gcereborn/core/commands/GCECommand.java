@@ -22,8 +22,13 @@ public final class GCECommand implements CommandExecutor {
     private final Set<SubCommand> subCommands = new HashSet<>();
 
     public GCECommand() {
-        subCommands.add(new MakeChickenCommand());
-        subCommands.add(new CalcChanceCommand());
+        var config = GeneticChickengineering.getConfigService();
+        if (config.isSubCommandEnabled("makechicken")) {
+            subCommands.add(new MakeChickenCommand());
+        }
+        if (config.isSubCommandEnabled("calcchance")) {
+            subCommands.add(new CalcChanceCommand());
+        }
     }
 
     @Override

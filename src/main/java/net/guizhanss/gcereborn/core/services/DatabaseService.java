@@ -112,7 +112,8 @@ public final class DatabaseService {
         Preconditions.checkArgument(uuid != null, "uuid cannot be null");
         Preconditions.checkArgument(dna != null, "dna cannot be null");
 
-        checkConnection();String sql = "INSERT INTO entities (uuid, dna) VALUES (?, ?);";
+        checkConnection();
+        String sql = "INSERT INTO entities (uuid, dna) VALUES (?, ?);";
         try (var stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, uuid);
             stmt.setString(2, dna);
