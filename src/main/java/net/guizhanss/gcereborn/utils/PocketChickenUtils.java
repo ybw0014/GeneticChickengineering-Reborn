@@ -101,12 +101,17 @@ public final class PocketChickenUtils {
         String uuid = entity.getUniqueId().toString();
 
         if (entity.hasMetadata(Keys.METADATA)) {
-            dna = new DNA(entity.getMetadata(Keys.METADATA).get(0).asString());
+            String dnaStr = entity.getMetadata(Keys.METADATA).get(0).asString();
+            GeneticChickengineering.debug("captured chicken has meta data: {0}", dnaStr);
+            dna = new DNA(dnaStr);
             db.removeChicken(uuid);
         } else if (db.hasChicken(uuid)) {
             // Checked if the UUID existed first, so null won't be returned
-            dna = new DNA(db.getChickenDNA(uuid));
+            String dnaStr = db.getChickenDNA(uuid);
+            GeneticChickengineering.debug("captured chicken in database: {0}", dnaStr);
+            dna = new DNA(dnaStr);
         } else {
+            GeneticChickengineering.debug("captured chicken has no DNA information");
             dna = new DNA();
         }
 
@@ -117,7 +122,11 @@ public final class PocketChickenUtils {
             } else {
                 name = "";
             }
-            name = name.replaceAll(" (" + ChickenTypes.getDisplayName(dna.getTyping()) + ")", "");
+            String replace = "(" + ChickenTypes.getDisplayName(dna.getTyping()) + ")";
+            GeneticChickengineering.debug("chicken name before capture: {0}", name);
+            GeneticChickengineering.debug("replacing all string: {0}", replace);
+            name = name.replace(replace, "");
+            GeneticChickengineering.debug("chicken name after replacing: {0}", name);
             if (name.isEmpty()) {
                 json.addProperty("_customName", (String) null);
                 json.addProperty("_customNameVisible", false);
