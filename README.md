@@ -4,6 +4,9 @@ Rewritten by ybw0014.
 
 ![License](https://img.shields.io/github/license/ybw0014/GeneticChickengineering-Reborn) 
 
+## Download
+
+[![Build Status](https://builds.guizhanss.com/ybw0014/GeneticChickengineering-Reborn/master/badge.svg)](https://builds.guizhanss.com/ybw0014/GeneticChickengineering-Reborn/master)
 
 ## Overview
 
