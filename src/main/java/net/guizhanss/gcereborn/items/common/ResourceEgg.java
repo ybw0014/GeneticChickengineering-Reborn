@@ -63,7 +63,7 @@ public class ResourceEgg extends SimpleSlimefunItem<ItemUseHandler> implements N
             }
             Block b = block.get();
             Block place = b.getRelative(e.getClickedFace());
-            if (Slimefun.getProtectionManager().hasPermission(e.getPlayer(), place.getLocation(), Interaction.PLACE_BLOCK)) {
+            if (!Slimefun.getProtectionManager().hasPermission(e.getPlayer(), place.getLocation(), Interaction.PLACE_BLOCK)) {
                 GeneticChickengineering.getLocalization().sendMessage(e.getPlayer(), "no-permission");
                 return;
             }
