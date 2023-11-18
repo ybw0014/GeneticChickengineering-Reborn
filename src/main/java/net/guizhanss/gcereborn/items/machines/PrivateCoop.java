@@ -28,19 +28,24 @@ import net.guizhanss.gcereborn.items.GCEItems;
 import net.guizhanss.gcereborn.utils.GuiItems;
 import net.guizhanss.gcereborn.utils.PocketChickenUtils;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 public class PrivateCoop extends AbstractMachine {
+    private static final int INFO_SLOT = 22;
 
     public PrivateCoop(ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe);
     }
 
     @Override
+    @Nonnull
     public ItemStack getProgressBar() {
-        return GCEItems.POCKET_CHICKEN;
+        return GCEItems.POCKET_CHICKEN.clone();
     }
 
     @Override
-    protected void tick(Block b) {
+    protected void tick(@Nonnull Block b) {
         super.tick(b);
         MachineProcessor<CraftingOperation> processor = getMachineProcessor();
         if (processor.getOperation(b) != null) {
@@ -52,12 +57,13 @@ public class PrivateCoop extends AbstractMachine {
             // Check if parent chickens have been removed
             if (this.getParents(inv).size() != 2) {
                 processor.endOperation(b);
-                inv.replaceExistingItem(22, GuiItems.BLACK_PANE);
+                inv.replaceExistingItem(INFO_SLOT, GuiItems.BLACK_PANE);
             }
         }
     }
 
-    private List<ItemStack> getParents(BlockMenu inv) {
+    @Nonnull
+    private List<ItemStack> getParents(@Nonnull BlockMenu inv) {
         List<ItemStack> parents = new LinkedList<>();
         for (int slot : getInputSlots()) {
             ItemStack parent = inv.getItemInSlot(slot);
@@ -76,44 +82,45 @@ public class PrivateCoop extends AbstractMachine {
     }
 
     @Override
-    protected MachineRecipe findNextRecipe(BlockMenu menu) {
+    @Nullable
+    protected MachineRecipe findNextRecipe(@Nonnull BlockMenu menu) {
         var config = GeneticChickengineering.getConfigService();
-        List<ItemStack> parents = this.getParents(menu);
-        if (parents.size() == 2) {
-            ItemStack baby = PocketChickenUtils.breed(parents.get(0), parents.get(1));
-            if (baby == null) {
-                // Shouldn't ever be here, just in case
-                return null;
-            }
-            MachineRecipe recipe = new MachineRecipe(
-                config.isTest() ? 1 : 60,
-                new ItemStack[] { parents.get(0), parents.get(1) },
-                new ItemStack[] { baby }
-            );
-            Inventory inv = menu.toInventory();
+        List<ItemStack> parents = getParents(menu);
+        if (parents.size() != 2) {
+            return null;
+        }
 
-            inv.setMaxStackSize(1);
-            if (!InvUtils.fitAll(inv, recipe.getOutput(), getOutputSlots())) {
-                return null;
-            }
+        ItemStack baby = PocketChickenUtils.breed(parents.get(0), parents.get(1));
+        if (baby == null) {
+            // Shouldn't ever be here, just in case
+            return null;
+        }
+        MachineRecipe recipe = new MachineRecipe(
+            config.isTest() ? 1 : 60,
+            new ItemStack[] { parents.get(0), parents.get(1) },
+            new ItemStack[] { baby }
+        );
+        Inventory inv = menu.toInventory();
 
-            if (GeneticChickengineering.getConfigService().isPainEnabled()) {
-                for (ItemStack parent : parents) {
-                    if (!PocketChickenUtils.survivesPain(parent) && !GeneticChickengineering.getConfigService().isPainDeathEnabled()) {
-                        return null;
-                    }
-                    PocketChickenUtils.possiblyHarm(parent);
-                    if (PocketChickenUtils.getHealth(parent) == 0d) {
-                        ItemUtils.consumeItem(parent, false);
-                        menu.getBlock().getWorld().playSound(menu.getLocation(), Sound.ENTITY_CHICKEN_DEATH, 1f, 1f);
-                        return null;
-                    }
+        inv.setMaxStackSize(1);
+        if (!InvUtils.fitAll(inv, recipe.getOutput(), getOutputSlots())) {
+            return null;
+        }
+
+        if (GeneticChickengineering.getConfigService().isPainEnabled()) {
+            for (ItemStack parent : parents) {
+                if (!PocketChickenUtils.survivesPain(parent) && !GeneticChickengineering.getConfigService().isPainDeathEnabled()) {
+                    return null;
+                }
+                PocketChickenUtils.possiblyHarm(parent);
+                if (PocketChickenUtils.getHealth(parent) <= 0d) {
+                    ItemUtils.consumeItem(parent, false);
+                    menu.getBlock().getWorld().playSound(menu.getLocation(), Sound.ENTITY_CHICKEN_DEATH, 1f, 1f);
+                    return null;
                 }
             }
-
-            return recipe;
         }
-        return null;
-    }
 
+        return recipe;
+    }
 }

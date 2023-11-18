@@ -1,10 +1,9 @@
 package net.guizhanss.gcereborn.items.machines;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -26,56 +25,58 @@ import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenuPreset;
 
 import net.guizhanss.gcereborn.GeneticChickengineering;
+import net.guizhanss.gcereborn.items.GCEItems;
 import net.guizhanss.gcereborn.utils.GuiItems;
 import net.guizhanss.gcereborn.utils.PocketChickenUtils;
 
 public class ExcitationChamber extends AbstractMachine {
-    private static final Map<BlockMenu, ItemStack> RESOURCES = new HashMap<>();
-    private ItemStack currentResource;
+    private static final int[] BACKGROUND = new int[] {
+        0, 1, 2, 6, 7, 8,
+        9, 10, 11, 15, 16, 17,
+        18, 19, 20, 21, 23, 24,
+        25, 26
+    };
+    private static final int[] INPUT_BORDER = new int[] { 3, 5, 12, 13, 14 };
+    private static final int[] OUTPUT_BORDER = new int[] { 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 44 };
+    private static final int[] INPUT_SLOTS = new int[] { 4 };
+    private static final int[] OUTPUT_SLOTS = new int[] { 37, 38, 39, 40, 41, 42, 43 };
+    private static final int INFO_SLOT = 22;
 
     public ExcitationChamber(ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe);
     }
 
-    @Nonnull
-    private Block initBlock(@Nonnull Block b) {
-        // Hacky way to get the progress bar to be the resource without sharing
-        // the progress bar amongst all the excitation chambers
-        BlockMenu inv = BlockStorage.getInventory(b);
-        currentResource = RESOURCES.getOrDefault(inv, GuiItems.BLACK_PANE);
-        return b;
-    }
-
     @Override
+    @Nonnull
     public ItemStack getProgressBar() {
-        return currentResource;
+        return GCEItems.POCKET_CHICKEN.clone();
     }
 
     @Override
     public int[] getInputSlots() {
-        return new int[] { 4 };
+        return INPUT_SLOTS;
     }
 
     @Override
     public int[] getOutputSlots() {
-        return new int[] { 37, 38, 39, 40, 41, 42, 43 };
+        return OUTPUT_SLOTS;
     }
 
     @Override
     protected void constructMenu(@Nonnull BlockMenuPreset preset) {
-        for (int i : new int[] { 0, 1, 2, 6, 7, 8, 9, 10, 11, 15, 16, 17, 18, 19, 20, 21, 23, 24, 25, 26 }) {
+        for (int i : BACKGROUND) {
             preset.addItem(i, ChestMenuUtils.getBackground(), ChestMenuUtils.getEmptyClickHandler());
         }
 
-        for (int i : new int[] { 3, 5, 12, 13, 14 }) {
+        for (int i : INPUT_BORDER) {
             preset.addItem(i, ChestMenuUtils.getInputSlotTexture(), ChestMenuUtils.getEmptyClickHandler());
         }
 
-        for (int i : new int[] { 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 44 }) {
+        for (int i : OUTPUT_BORDER) {
             preset.addItem(i, ChestMenuUtils.getOutputSlotTexture(), ChestMenuUtils.getEmptyClickHandler());
         }
 
-        preset.addItem(22, GuiItems.BLACK_PANE, ChestMenuUtils.getEmptyClickHandler());
+        preset.addItem(INFO_SLOT, GuiItems.BLACK_PANE, ChestMenuUtils.getEmptyClickHandler());
 
         for (int i : getOutputSlots()) {
             preset.addMenuClickHandler(i, (p, slot, cursor, action) -> cursor != null && !cursor.getType().isAir());
@@ -83,23 +84,19 @@ public class ExcitationChamber extends AbstractMachine {
     }
 
     @Override
-    protected void tick(Block b) {
-        super.tick(this.initBlock(b));
+    protected void tick(@Nonnull Block b) {
+        super.tick(b);
         BlockMenu inv = BlockStorage.getInventory(b);
         MachineProcessor<CraftingOperation> processor = getMachineProcessor();
-        if (processor.getOperation(b) != null) {
-            if (this.findNextRecipe(inv) == null) {
-                processor.endOperation(b);
-                inv.replaceExistingItem(22, GuiItems.BLACK_PANE);
-                RESOURCES.remove(inv);
-            }
-        } else {
-            RESOURCES.remove(inv);
+        if (processor.getOperation(b) != null && findNextRecipe(inv) == null) {
+            processor.endOperation(b);
+            inv.replaceExistingItem(INFO_SLOT, GuiItems.BLACK_PANE);
         }
     }
 
     @Override
-    protected MachineRecipe findNextRecipe(BlockMenu menu) {
+    @Nullable
+    protected MachineRecipe findNextRecipe(@Nonnull BlockMenu menu) {
         var config = GeneticChickengineering.getConfigService();
         for (int slot : getInputSlots()) {
             ItemStack chicken = menu.getItemInSlot(slot);
@@ -154,7 +151,6 @@ public class ExcitationChamber extends AbstractMachine {
                 }
             }
 
-            RESOURCES.put(menu, resourceIcon);
             return recipe;
         }
 

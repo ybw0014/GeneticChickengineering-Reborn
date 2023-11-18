@@ -1,5 +1,8 @@
 package net.guizhanss.gcereborn.items.machines;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.bukkit.Sound;
 import org.bukkit.inventory.ItemStack;
 
@@ -23,12 +26,14 @@ public class GeneticSequencer extends AbstractMachine {
     }
 
     @Override
+    @Nonnull
     public ItemStack getProgressBar() {
-        return GCEItems.POCKET_CHICKEN;
+        return GCEItems.POCKET_CHICKEN.clone();
     }
 
     @Override
-    protected MachineRecipe findNextRecipe(BlockMenu menu) {
+    @Nullable
+    protected MachineRecipe findNextRecipe(@Nonnull BlockMenu menu) {
         var config = GeneticChickengineering.getConfigService();
         for (int slot : getInputSlots()) {
             ItemStack item = menu.getItemInSlot(slot);
@@ -55,7 +60,7 @@ public class GeneticSequencer extends AbstractMachine {
             if (!InvUtils.fitAll(menu.toInventory(), recipe.getOutput(), getOutputSlots())) {
                 continue;
             }
-            if (config.isPainEnabled() && (PocketChickenUtils.getHealth(learnedChicken) <= 0d)) {
+            if (config.isPainEnabled() && PocketChickenUtils.getHealth(learnedChicken) <= 0d) {
                 ItemUtils.consumeItem(chicken, false);
                 menu.getBlock().getWorld().playSound(menu.getLocation(), Sound.ENTITY_CHICKEN_DEATH, 1f, 1f);
                 continue;
