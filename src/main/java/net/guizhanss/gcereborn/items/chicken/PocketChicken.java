@@ -53,6 +53,7 @@ public class PocketChicken extends SimpleSlimefunItem<ItemUseHandler> implements
 
             ItemMeta meta = e.getItem().getItemMeta();
             JsonObject json = PersistentDataAPI.get(meta, Keys.ADAPTER, ADAPTER);
+            ADAPTER.apply(entity, json);
             int[] dnaState = PersistentDataAPI.getIntArray(meta, Keys.DNA);
             DNA dna;
             if (dnaState != null) {
