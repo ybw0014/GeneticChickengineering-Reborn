@@ -37,7 +37,7 @@ public class GeneticChickengineering extends AbstractAddon {
     private boolean debugEnabled = false;
 
     public GeneticChickengineering() {
-        super("ybw0014", "GeneticChickengineering-Reborn", "master", "auto-update");
+        super("ybw0014", "GeneticChickengineering-Reborn", "master", "options.auto-update");
     }
 
 
