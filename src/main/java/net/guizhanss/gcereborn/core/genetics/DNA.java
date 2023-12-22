@@ -104,7 +104,8 @@ public class DNA {
     public DNA() {
         var config = GeneticChickengineering.getConfigService();
         this.sequence = new Gene[6];
-        int[] mutations = new Random().ints(0, 6).distinct().limit(config.getMaxMutation()).toArray();
+        int[] mutations = ThreadLocalRandom.current().ints(0, 6)
+            .distinct().limit(config.getMaxMutation()).toArray();
 
         for (int i = 0; i < 6; i++) {
             char notation = Character.toUpperCase(ALLELES[i]);
@@ -192,7 +193,7 @@ public class DNA {
         int out = 0;
         for (int i = 5; i > -1; i--) {
             if (this.sequence[i].isDominant()) {
-                out += (int) Math.pow(2, 5 - i);
+                out += (int) Math.pow(2, 5.0 - i);
             }
         }
         return out;
