@@ -11,7 +11,7 @@ import com.google.common.base.Preconditions;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.plugin.Plugin;
 
-import io.github.thebusybiscuit.slimefun4.libraries.dough.updater.GitHubBuildsUpdater;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.updater.BlobBuildUpdater;
 import io.github.thebusybiscuit.slimefun4.libraries.paperlib.PaperLib;
 
 import net.guizhanss.gcereborn.core.commands.GCECommand;
@@ -160,8 +160,7 @@ public class GeneticChickengineering extends AbstractAddon {
     @Override
     protected void autoUpdate() {
         if (getPluginVersion().startsWith("DEV")) {
-            String path = getGithubUser() + "/" + getGithubRepo() + "/" + getGithubBranch();
-            new GitHubBuildsUpdater(this, getFile(), path).start();
+            new BlobBuildUpdater(this, getFile(), getGithubRepo()).start();
         } else if (getPluginVersion().startsWith("Build")) {
             try {
                 // use updater in lib plugin

@@ -1,7 +1,6 @@
 package net.guizhanss.gcereborn.core.genetics;
 
 import java.util.Arrays;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
 import javax.annotation.Nonnull;
