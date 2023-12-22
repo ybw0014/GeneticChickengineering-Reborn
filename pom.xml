@@ -10,6 +10,9 @@
     <properties>
         <java.version>16</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <sonar.organization>guizhancraft</sonar.organization>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
 
     <licenses>
@@ -147,7 +150,7 @@
         <dependency>
             <groupId>net.guizhanss</groupId>
             <artifactId>GuizhanLib-api</artifactId>
-            <version>1.5.0</version>
+            <version>1.6.1</version>
             <scope>compile</scope>
         </dependency>
 
