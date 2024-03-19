@@ -146,7 +146,9 @@ public class ExcitationChamber extends AbstractMachine {
                 PocketChickenUtils.possiblyHarm(chicken);
                 if (PocketChickenUtils.getHealth(chicken) <= 0d) {
                     ItemUtils.consumeItem(chicken, false);
-                    menu.getBlock().getWorld().playSound(menu.getLocation(), Sound.ENTITY_CHICKEN_DEATH, 1f, 1f);
+                    GeneticChickengineering.getScheduler().run(() ->
+                        menu.getLocation().getWorld().playSound(menu.getLocation(), Sound.ENTITY_CHICKEN_DEATH, 1f, 1f)
+                    );
                     continue;
                 }
             }
