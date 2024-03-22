@@ -3,6 +3,7 @@ package net.guizhanss.gcereborn.items.chicken;
 import java.util.Optional;
 
 import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.google.gson.JsonObject;
 
@@ -17,6 +18,7 @@ import org.bukkit.metadata.FixedMetadataValue;
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
+import io.github.thebusybiscuit.slimefun4.core.attributes.DistinctiveItem;
 import io.github.thebusybiscuit.slimefun4.core.attributes.NotPlaceable;
 import io.github.thebusybiscuit.slimefun4.core.handlers.ItemUseHandler;
 import io.github.thebusybiscuit.slimefun4.implementation.items.SimpleSlimefunItem;
@@ -28,7 +30,7 @@ import net.guizhanss.gcereborn.core.adapters.AnimalsAdapter;
 import net.guizhanss.gcereborn.core.genetics.DNA;
 import net.guizhanss.gcereborn.utils.Keys;
 
-public class PocketChicken extends SimpleSlimefunItem<ItemUseHandler> implements NotPlaceable {
+public class PocketChicken extends SimpleSlimefunItem<ItemUseHandler> implements NotPlaceable, DistinctiveItem {
 
     public static final AnimalsAdapter<Chicken> ADAPTER = new AnimalsAdapter<>(Chicken.class);
 
@@ -85,5 +87,11 @@ public class PocketChicken extends SimpleSlimefunItem<ItemUseHandler> implements
                 }
             }
         };
+    }
+
+    @Override
+    @ParametersAreNonnullByDefault
+    public boolean canStack(ItemMeta meta1, ItemMeta meta2) {
+        return meta1.getPersistentDataContainer().equals(meta2.getPersistentDataContainer());
     }
 }
