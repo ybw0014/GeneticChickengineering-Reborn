@@ -1,6 +1,5 @@
 package net.guizhanss.gcereborn.core.commands.subcommands;
 
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,6 +11,7 @@ import org.bukkit.command.CommandSender;
 import net.guizhanss.gcereborn.utils.DnaUtils;
 
 interface DnaCompletion {
+
     @Nonnull
     @ParametersAreNonnullByDefault
     default List<String> tabComplete(CommandSender sender, String[] args, int... indices) {

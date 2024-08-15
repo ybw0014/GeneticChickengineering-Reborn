@@ -9,12 +9,14 @@ import com.bgsoftware.wildstacker.api.WildStackerAPI;
 import org.bukkit.entity.Chicken;
 
 import net.guizhanss.gcereborn.GeneticChickengineering;
+import net.guizhanss.gcereborn.integrations.wildstacker.EntityStackListener;
 
 import lombok.Getter;
 import uk.antiperson.stackmob.StackMob;
 
 @Getter
 public final class IntegrationService {
+
     private final GeneticChickengineering plugin;
 
     private final boolean stackMobEnabled;
@@ -30,6 +32,10 @@ public final class IntegrationService {
 
         if (stackMobEnabled) {
             stackMobInst = (StackMob) plugin.getServer().getPluginManager().getPlugin("StackMob");
+        }
+
+        if (wildStackerEnabled) {
+            new EntityStackListener(plugin);
         }
     }
 

@@ -91,6 +91,12 @@ public final class DatabaseService {
         return getAllChickens().containsKey(uuid);
     }
 
+    public boolean hasChicken(@Nonnull UUID uuid) {
+        Preconditions.checkArgument(uuid != null, "uuid cannot be null");
+
+        return hasChicken(uuid.toString());
+    }
+
     /**
      * Get the chicken DNA.
      * Make sure you have called {@link #hasChicken(String)} to check if chicken exists first.
@@ -105,6 +111,12 @@ public final class DatabaseService {
         Preconditions.checkArgument(uuid != null, "uuid cannot be null");
 
         return getAllChickens().get(uuid);
+    }
+
+    public String getChickenDNA(@Nonnull UUID uuid) {
+        Preconditions.checkArgument(uuid != null, "uuid cannot be null");
+
+        return getChickenDNA(uuid.toString());
     }
 
     @ParametersAreNonnullByDefault
