@@ -15,8 +15,11 @@ import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
 import io.github.thebusybiscuit.slimefun4.core.attributes.NotPlaceable;
 import io.github.thebusybiscuit.slimefun4.core.handlers.EntityInteractHandler;
 import io.github.thebusybiscuit.slimefun4.core.handlers.ItemUseHandler;
+import io.github.thebusybiscuit.slimefun4.implementation.Slimefun;
 import io.github.thebusybiscuit.slimefun4.implementation.items.SimpleSlimefunItem;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 
+import net.guizhanss.gcereborn.GeneticChickengineering;
 import net.guizhanss.gcereborn.utils.PocketChickenUtils;
 
 public class ChickenNet extends SimpleSlimefunItem<EntityInteractHandler> implements NotPlaceable {
@@ -34,9 +37,15 @@ public class ChickenNet extends SimpleSlimefunItem<EntityInteractHandler> implem
             if (e.getRightClicked().getType() != EntityType.CHICKEN) {
                 return;
             }
-            Chicken chick = (Chicken) e.getRightClicked();
-            Location l = chick.getLocation().toCenterLocation();
-            ItemStack pocketChicken = PocketChickenUtils.capture(chick);
+            Chicken chicken = (Chicken) e.getRightClicked();
+
+            if (!Slimefun.getProtectionManager().hasPermission(e.getPlayer(), chicken.getLocation(), Interaction.INTERACT_ENTITY)) {
+                GeneticChickengineering.getLocalization().sendMessage(e.getPlayer(), "no-permission");
+                return;
+            }
+
+            Location l = chicken.getLocation().toCenterLocation();
+            ItemStack pocketChicken = PocketChickenUtils.capture(chicken);
             l.getWorld().dropItemNaturally(l, pocketChicken);
             l.getWorld().playSound(l, Sound.ENTITY_CHICKEN_EGG, 1F, 1F);
         };
