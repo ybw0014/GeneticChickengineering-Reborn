@@ -3,6 +3,9 @@ options:
   auto-update: true
   # Display debug messages.
   debug: false
+  # Enable test mode.
+  # WARNING: This will make machine's processing time reduced to 1 second. Only enable this for testing purposes.
+  test: false
   # Language of this plugin.
   # Available languages: https://github.com/ybw0014/GeneticChickengineering-Reborn/tree/master/LOCALES.md
   lang: en-US

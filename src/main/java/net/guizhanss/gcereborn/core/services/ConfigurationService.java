@@ -40,7 +40,7 @@ public final class ConfigurationService {
         autoUpdate = config.getBoolean("options.auto-update", true);
         debug = config.getBoolean("options.debug", false);
         test = config.getBoolean("options.test", false);
-        lang = config.getString("options.language", "en-US");
+        lang = config.getString("options.lang", "en-US");
         displayResources = config.getBoolean("options.display-resource-in-name", true);
         maxMutation = config.getInt("options.max-mutation", 1, 2, 6);
         mutationRate = config.getInt("options.mutation-rate", 1, 30, 100);
