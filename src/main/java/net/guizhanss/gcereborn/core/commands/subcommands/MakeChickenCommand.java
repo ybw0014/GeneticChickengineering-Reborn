@@ -2,28 +2,32 @@ package net.guizhanss.gcereborn.core.commands.subcommands;
 
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.annotation.ParametersAreNonnullByDefault;
+
+import net.guizhanss.guizhanlib.minecraft.commands.AbstractCommand;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import net.guizhanss.gcereborn.GeneticChickengineering;
-import net.guizhanss.gcereborn.core.commands.SubCommand;
+import net.guizhanss.gcereborn.core.commands.AbstractSubCommand;
 import net.guizhanss.gcereborn.core.genetics.DNA;
 import net.guizhanss.gcereborn.utils.PocketChickenUtils;
 import net.guizhanss.guizhanlib.minecraft.utils.InventoryUtil;
 
-public class MakeChickenCommand extends SubCommand implements DnaCompletion {
+public final class MakeChickenCommand extends AbstractSubCommand implements DnaCompletion {
 
-    public MakeChickenCommand() {
-        super("makechicken", false, "geneticchickengineering.command.makechicken", "<DNA>");
+    public MakeChickenCommand(@Nonnull AbstractCommand parent) {
+        super(parent, "makechicken", "<DNA> [baby]");
     }
 
     @Override
     @ParametersAreNonnullByDefault
-    public void onCommand(CommandSender sender, String[] args) {
-        if (!canExecute(sender, args)) {
+    public void onExecute(CommandSender sender, String[] args) {
+        if (!hasPermission(sender)) {
+            GeneticChickengineering.getLocalization().sendMessage(sender, "no-permission");
             return;
         }
         if (!(sender instanceof Player p)) {
@@ -31,20 +35,27 @@ public class MakeChickenCommand extends SubCommand implements DnaCompletion {
             return;
         }
 
-        String notation = args[1];
+        String notation = args[0];
         if (!DNA.isValidSequence(notation)) {
             GeneticChickengineering.getLocalization().sendMessage(sender, "invalid-dna-notation", notation);
             return;
         }
+        boolean isBaby = true;
+        if (args.length == 2) {
+            isBaby = Boolean.parseBoolean(args[1]);
+        }
 
         DNA dna = new DNA(notation.toCharArray());
-        ItemStack chicken = PocketChickenUtils.fromDNA(dna);
+        ItemStack chicken = PocketChickenUtils.fromDNA(dna, isBaby);
         InventoryUtil.push(p, chicken);
     }
 
     @Override
     @ParametersAreNonnullByDefault
-    public List<String> onTabComplete(CommandSender sender, String[] args) {
-        return tabComplete(sender, args, 1, 2, 3);
+    public List<String> onTab(CommandSender sender, String[] args) {
+        if (args.length == 2) {
+            return List.of("true", "false");
+        }
+        return tabComplete(sender, args, 0);
     }
 }

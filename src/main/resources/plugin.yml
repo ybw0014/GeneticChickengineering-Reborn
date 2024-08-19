@@ -4,7 +4,7 @@ description: An addon for Slimefun that adds resource chickens, rewritten by ybw
 main: net.guizhanss.gcereborn.GeneticChickengineering
 website: https://github.com/ybw0014/GeneticChickengineering-Reborn
 version: ${project.version}
-api-version: 1.16
+api-version: 1.18
 depend:
   - Slimefun
 softdepend:
@@ -12,10 +12,10 @@ softdepend:
   - StackMob
   - WildStacker
 commands:
-    geneticchickengineering:
-        aliases: gce
-        description: GCE base command
-        usage: "Usage: /<command> <subcommand> [arguments]"
+  geneticchickengineering:
+    aliases: gce
+    description: GCE base command
+    usage: "Usage: /<command> <subcommand> [arguments]"
 permissions:
   geneticchickengineering.command.makechicken:
     description: Allows a player to make Pocket Chickens from command

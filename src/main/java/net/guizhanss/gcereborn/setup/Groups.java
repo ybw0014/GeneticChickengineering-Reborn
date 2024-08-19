@@ -12,6 +12,7 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public final class Groups {
+
     public static final ItemGroup MAIN = new ItemGroup(
         Keys.get("genetic_chickengineering"),
         GeneticChickengineering.getLocalization().getItemGroupItem(

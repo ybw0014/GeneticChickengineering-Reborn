@@ -22,9 +22,13 @@ import com.google.common.base.Preconditions;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 
+import io.github.thebusybiscuit.slimefun4.libraries.dough.data.persistent.PersistentDataAPI;
+
 import net.guizhanss.gcereborn.GeneticChickengineering;
+import net.guizhanss.gcereborn.utils.Keys;
 
 @SuppressWarnings("ConstantConditions")
+@Deprecated(forRemoval = true)
 public final class DatabaseService {
 
     private static final String DB_NAME = "GCE.db";
@@ -41,8 +45,7 @@ public final class DatabaseService {
         connect();
 
         if (isConnected()) {
-            GeneticChickengineering.log(Level.INFO, GeneticChickengineering.getLocalization().getString(
-                "console.database.connected"));
+            GeneticChickengineering.log(Level.INFO, GeneticChickengineering.getLocalization().getString("console.database.connected"));
             createTables();
         }
     }
@@ -53,8 +56,7 @@ public final class DatabaseService {
 
     public boolean checkConnection() {
         if (!isConnected()) {
-            GeneticChickengineering.log(Level.SEVERE, GeneticChickengineering.getLocalization().getString(
-                "console.database.not-connected"));
+            GeneticChickengineering.log(Level.SEVERE, GeneticChickengineering.getLocalization().getString("console.database.not-connected"));
             return false;
         } else {
             return true;
@@ -79,8 +81,7 @@ public final class DatabaseService {
             hasChanges = false;
             cache = chickens;
         } catch (SQLException ex) {
-            GeneticChickengineering.log(Level.SEVERE, ex, GeneticChickengineering.getLocalization().getString(
-                "console.database.exception"));
+            GeneticChickengineering.log(Level.SEVERE, ex, GeneticChickengineering.getLocalization().getString("console.database.exception"));
         }
         return chickens;
     }
@@ -101,9 +102,7 @@ public final class DatabaseService {
      * Get the chicken DNA.
      * Make sure you have called {@link #hasChicken(String)} to check if chicken exists first.
      *
-     * @param uuid
-     *     The uuid of the chicken.
-     *
+     * @param uuid The uuid of the chicken.
      * @return The chicken DNA.
      */
     @Nullable
@@ -132,8 +131,7 @@ public final class DatabaseService {
             stmt.executeUpdate();
             hasChanges = true;
         } catch (SQLException ex) {
-            GeneticChickengineering.log(Level.SEVERE, ex, GeneticChickengineering.getLocalization().getString(
-                "console.database.exception"));
+            GeneticChickengineering.log(Level.SEVERE, ex, GeneticChickengineering.getLocalization().getString("console.database.exception"));
         }
     }
 
@@ -147,8 +145,7 @@ public final class DatabaseService {
             stmt.executeUpdate();
             hasChanges = true;
         } catch (SQLException ex) {
-            GeneticChickengineering.log(Level.SEVERE, ex, GeneticChickengineering.getLocalization().getString(
-                "console.database.exception"));
+            GeneticChickengineering.log(Level.SEVERE, ex, GeneticChickengineering.getLocalization().getString("console.database.exception"));
         }
     }
 
@@ -173,23 +170,25 @@ public final class DatabaseService {
                 Entity chick = world.getEntity(UUID.fromString(uuid));
                 if (chick != null) {
                     found.add(uuid);
+                    PersistentDataAPI.setString(chick, Keys.CHICKEN_DNA, entry.getValue());
                 }
             }
         }
-        int deleteCount = 0;
+        int validCount = 0;
+        int invalidCount = 0;
 
         for (var entry : chickens.entrySet()) {
             String uuid = entry.getKey();
-            if (found.contains(uuid)) {
-                continue;
-            }
             removeChicken(uuid);
-            deleteCount++;
+            if (found.contains(uuid)) {
+                validCount++;
+            } else {
+                invalidCount++;
+            }
         }
         commit();
-        if (deleteCount > 0) {
-            GeneticChickengineering.log(Level.INFO, GeneticChickengineering.getLocalization().getString(
-                "console.database.cleanup", deleteCount));
+        if (invalidCount > 0) {
+            GeneticChickengineering.log(Level.INFO, "Migrated {0} valid records and removed {1} invalid records from the database.", validCount, invalidCount);
         }
     }
 
@@ -199,8 +198,7 @@ public final class DatabaseService {
             commit();
             conn.close();
         } catch (SQLException ex) {
-            GeneticChickengineering.log(Level.SEVERE, ex, GeneticChickengineering.getLocalization().getString(
-                "console.database.exception"));
+            GeneticChickengineering.log(Level.SEVERE, ex, GeneticChickengineering.getLocalization().getString("console.database.exception"));
         }
     }
 
@@ -210,22 +208,17 @@ public final class DatabaseService {
             conn = DriverManager.getConnection(url);
             conn.setAutoCommit(false);
         } catch (SQLException ex) {
-            GeneticChickengineering.log(Level.SEVERE, ex, GeneticChickengineering.getLocalization().getString(
-                "console.database.connect-fail"));
+            GeneticChickengineering.log(Level.SEVERE, ex, GeneticChickengineering.getLocalization().getString("console.database.connect-fail"));
         }
     }
 
     private void createTables() {
         try {
-            String sql = "CREATE TABLE IF NOT EXISTS entities (" +
-                "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                "uuid TEXT NOT NULL," +
-                "dna TEXT NOT NULL);";
+            String sql = "CREATE TABLE IF NOT EXISTS entities (" + "id INTEGER PRIMARY KEY AUTOINCREMENT," + "uuid TEXT NOT NULL," + "dna TEXT NOT NULL);";
             execSql(sql);
             commit();
         } catch (SQLException ex) {
-            GeneticChickengineering.log(Level.SEVERE, ex, GeneticChickengineering.getLocalization().getString(
-                "console.database.exception"));
+            GeneticChickengineering.log(Level.SEVERE, ex, GeneticChickengineering.getLocalization().getString("console.database.exception"));
         }
     }
 
@@ -242,8 +235,7 @@ public final class DatabaseService {
         try {
             conn.commit();
         } catch (SQLException ex) {
-            GeneticChickengineering.log(Level.SEVERE, ex, GeneticChickengineering.getLocalization().getString(
-                "console.database.exception"));
+            GeneticChickengineering.log(Level.SEVERE, ex, GeneticChickengineering.getLocalization().getString("console.database.exception"));
         }
     }
 }

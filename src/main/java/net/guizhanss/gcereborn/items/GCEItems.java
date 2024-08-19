@@ -13,6 +13,7 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public final class GCEItems {
+
     public static final SlimefunItemStack POCKET_CHICKEN;
     public static final SlimefunItemStack CHICKEN_NET;
     public static final SlimefunItemStack WATER_EGG;
@@ -23,11 +24,13 @@ public final class GCEItems {
     public static final SlimefunItemStack EXCITATION_CHAMBER_3;
     public static final SlimefunItemStack PRIVATE_COOP;
     public static final SlimefunItemStack RESTORATION_CHAMBER;
+
     private static final String LORE_RIGHT_CLICK_TO_USE;
 
     static {
         LORE_RIGHT_CLICK_TO_USE = GeneticChickengineering.getLocalization().getString("lores.right-click-to-use");
 
+        // @formatter:off
         POCKET_CHICKEN = GeneticChickengineering.getLocalization().getItem(
             "POCKET_CHICKEN",
             "1638469a599ceef7207537603248a9ab11ff591fd378bea4735b346a7fae893"
@@ -92,5 +95,6 @@ public final class GCEItems {
             LoreBuilder.machine(MachineTier.MEDIUM, MachineType.MACHINE),
             LoreBuilder.powerPerSecond(4)
         );
+        // @formatter:on
     }
 }

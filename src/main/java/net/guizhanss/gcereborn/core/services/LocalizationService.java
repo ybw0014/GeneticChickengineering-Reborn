@@ -19,6 +19,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 @SuppressWarnings("ConstantConditions")
 public final class LocalizationService extends SlimefunLocalization {
+
     public LocalizationService(GeneticChickengineering plugin) {
         super(plugin);
     }

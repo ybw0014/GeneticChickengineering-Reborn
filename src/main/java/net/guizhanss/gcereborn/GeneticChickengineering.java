@@ -15,7 +15,6 @@ import io.github.thebusybiscuit.slimefun4.libraries.dough.updater.BlobBuildUpdat
 import io.github.thebusybiscuit.slimefun4.libraries.paperlib.PaperLib;
 
 import net.guizhanss.gcereborn.core.commands.GCECommand;
-import net.guizhanss.gcereborn.core.commands.GCECompleter;
 import net.guizhanss.gcereborn.core.services.ConfigurationService;
 import net.guizhanss.gcereborn.core.services.DatabaseService;
 import net.guizhanss.gcereborn.core.services.IntegrationService;
@@ -131,9 +130,7 @@ public class GeneticChickengineering extends AbstractAddon {
             if (command == null) {
                 log(Level.SEVERE, localization.getString("console.load.commands-fail"));
             } else {
-                var gceCommand = new GCECommand();
-                command.setExecutor(gceCommand);
-                command.setTabCompleter(new GCECompleter(gceCommand));
+                new GCECommand(command).register();
             }
         }
 
@@ -143,6 +140,9 @@ public class GeneticChickengineering extends AbstractAddon {
 
         // metrics
         setupMetrics();
+
+        // run cleanup once after startup
+        getScheduler().run(() -> dbService.cleanup());
     }
 
     @Override

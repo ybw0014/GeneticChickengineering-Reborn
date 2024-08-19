@@ -9,5 +9,6 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public final class GuiItems {
+
     public static final ItemStack BLACK_PANE = new CustomItemStack(Material.BLACK_STAINED_GLASS_PANE, " ");
 }

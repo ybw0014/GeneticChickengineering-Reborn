@@ -15,6 +15,7 @@ import lombok.Getter;
 
 @Getter
 public class ChickenProduct {
+
     private final String name;
     private final ItemStack product;
 

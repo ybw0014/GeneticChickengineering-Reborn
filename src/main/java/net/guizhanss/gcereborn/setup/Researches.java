@@ -10,6 +10,7 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public final class Researches {
+
     public static final Research MAIN = new Research(
         Keys.get("genetic_chickengineering"),
         29841,

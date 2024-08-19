@@ -37,7 +37,7 @@ public class GeneticSequencer extends AbstractMachine {
         var config = GeneticChickengineering.getConfigService();
         for (int slot : getInputSlots()) {
             ItemStack item = menu.getItemInSlot(slot);
-            if (item == null || item.getType().isAir() || !PocketChickenUtils.isPocketChicken(item) || PocketChickenUtils.isLearned(item)) {
+            if (!PocketChickenUtils.isPocketChicken(item) || PocketChickenUtils.isLearned(item)) {
                 continue;
             }
             ItemStack chicken = item.clone();
@@ -54,8 +54,8 @@ public class GeneticSequencer extends AbstractMachine {
             }
             MachineRecipe recipe = new MachineRecipe(
                 config.isTest() ? 1 : 30,
-                new ItemStack[] { chicken },
-                new ItemStack[] { learnedChicken }
+                new ItemStack[] {chicken},
+                new ItemStack[] {learnedChicken}
             );
             if (!InvUtils.fitAll(menu.toInventory(), recipe.getOutput(), getOutputSlots())) {
                 continue;

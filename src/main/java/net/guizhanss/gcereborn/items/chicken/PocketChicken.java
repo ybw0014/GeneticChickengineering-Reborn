@@ -7,13 +7,13 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 import com.google.gson.JsonObject;
 
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Chicken;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.metadata.FixedMetadataValue;
 
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
@@ -54,9 +54,9 @@ public class PocketChicken extends SimpleSlimefunItem<ItemUseHandler> implements
             Chicken entity = b.getWorld().spawn(location.toCenterLocation(), Chicken.class);
 
             ItemMeta meta = e.getItem().getItemMeta();
-            JsonObject json = PersistentDataAPI.get(meta, Keys.ADAPTER, ADAPTER);
+            JsonObject json = PersistentDataAPI.get(meta, Keys.POCKET_CHICKEN_ADAPTER, ADAPTER);
             ADAPTER.apply(entity, json);
-            int[] dnaState = PersistentDataAPI.getIntArray(meta, Keys.DNA);
+            int[] dnaState = PersistentDataAPI.getIntArray(meta, Keys.POCKET_CHICKEN_DNA);
             DNA dna;
             if (dnaState != null) {
                 dna = new DNA(dnaState);
@@ -65,26 +65,19 @@ public class PocketChicken extends SimpleSlimefunItem<ItemUseHandler> implements
             }
 
             String dss = dna.getStateString();
-            entity.setMetadata(Keys.METADATA, new FixedMetadataValue(GeneticChickengineering.getInstance(), dss));
-            GeneticChickengineering.getDatabaseService().addChicken(entity.getUniqueId().toString(), dss);
+            PersistentDataAPI.setString(entity, Keys.CHICKEN_DNA, dss);
 
             if (e.getPlayer().getGameMode() != GameMode.CREATIVE) {
                 ItemUtils.consumeItem(e.getItem(), false);
             }
 
             if (GeneticChickengineering.getConfigService().isDisplayResources() && dna.isKnown()) {
-                String name = "(" + ChickenTypes.getDisplayName(dna.getTyping()) + ")";
-                if (json != null) {
-                    if (!json.get("_customName").isJsonNull()) {
-                        name = json.get("_customName").getAsString() + " " + name;
-                    }
-                    json.addProperty("_customNameVisible", true);
-                    json.addProperty("_customName", name);
-                    ADAPTER.apply(entity, json);
-                } else {
-                    entity.setCustomName(name);
-                    entity.setCustomNameVisible(true);
+                String name = ChatColor.WHITE + "(" + ChickenTypes.getDisplayName(dna.getTyping()) + ")";
+                if (json != null && !json.get("_customName").isJsonNull()) {
+                    name = json.get("_customName").getAsString() + " " + name;
                 }
+                entity.setCustomName(name);
+                entity.setCustomNameVisible(true);
             }
         };
     }

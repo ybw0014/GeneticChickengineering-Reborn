@@ -9,6 +9,7 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public final class RecipeTypes {
+
     public static final RecipeType FROM_NET = GeneticChickengineering.getLocalization().getRecipeType(
         "from_net",
         GCEItems.CHICKEN_NET

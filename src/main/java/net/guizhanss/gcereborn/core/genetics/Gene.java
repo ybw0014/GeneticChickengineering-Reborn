@@ -7,6 +7,7 @@ import lombok.Getter;
 
 @Getter
 public class Gene {
+
     private final char[] alleles;
 
     public Gene(char[] markup) {
@@ -15,7 +16,7 @@ public class Gene {
     }
 
     public Gene(char markup, int state) {
-        this.alleles = new char[] { markup, markup };
+        this.alleles = new char[] {markup, markup};
         for (int i = 0; i < 2; i++) {
             if ((state & i + 1) == (i + 1)) {
                 this.alleles[i] = Character.toUpperCase(this.alleles[i]);

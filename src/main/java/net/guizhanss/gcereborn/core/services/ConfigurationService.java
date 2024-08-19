@@ -10,6 +10,7 @@ import lombok.Getter;
 
 @Getter
 public final class ConfigurationService {
+
     @Getter(AccessLevel.NONE)
     private final AddonConfig config;
 

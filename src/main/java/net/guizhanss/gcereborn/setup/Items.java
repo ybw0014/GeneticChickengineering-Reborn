@@ -23,6 +23,7 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public final class Items {
+
     public static void setup(@Nonnull GeneticChickengineering plugin) {
         new PocketChicken(
             Groups.MAIN,

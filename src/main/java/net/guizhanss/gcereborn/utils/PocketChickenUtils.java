@@ -38,23 +38,21 @@ public final class PocketChickenUtils {
     /**
      * Determine whether an {@link ItemStack} is a {@link PocketChicken}.
      *
-     * @param item
-     *     The {@link ItemStack} to check.
-     *
+     * @param item The {@link ItemStack} to check.
      * @return Whether the {@link ItemStack} is a {@link PocketChicken}.
      */
-    public boolean isPocketChicken(@Nonnull ItemStack item) {
+    public boolean isPocketChicken(@Nullable ItemStack item) {
         return item != null && !item.getType().isAir() && item.hasItemMeta()
-            && PersistentDataAPI.hasIntArray(item.getItemMeta(), Keys.DNA);
+            && PersistentDataAPI.hasIntArray(item.getItemMeta(), Keys.POCKET_CHICKEN_DNA);
     }
 
     /**
-     * Get a json object representing a baby chicken.
+     * Get a json object representing a chicken.
      *
      * @return A json object representing a baby chicken.
      */
     @Nonnull
-    public static JsonObject getBabyJson() {
+    public static JsonObject getChickenJson(boolean isBaby) {
         JsonObject json = new JsonObject();
         json.addProperty("_type", "CHICKEN");
         json.addProperty("_health", 4.0);
@@ -69,26 +67,21 @@ public final class PocketChickenUtils {
         json.addProperty("_collidable", true);
         json.addProperty("_gravity", true);
         json.addProperty("_fireTicks", 0);
-        json.addProperty("baby", true);
-        json.addProperty("_age", -24000);
+        json.addProperty("baby", isBaby);
+        json.addProperty("_age", isBaby ? -24000 : 0);
         json.addProperty("_ageLock", false);
         json.addProperty("_breedable", false);
         json.addProperty("_loveModeTicks", 0);
-        JsonObject attributes = new JsonObject();
-        json.add("_attributes", attributes);
-        JsonObject effects = new JsonObject();
-        json.add("_effects", effects);
-        JsonArray tags = new JsonArray();
-        json.add("_scoreboardTags", tags);
+        json.add("_attributes", new JsonObject());
+        json.add("_effects", new JsonObject());
+        json.add("_scoreboardTags", new JsonArray());
         return json;
     }
 
     /**
      * Captures a {@link Chicken} and returns a pocket chicken item.
      *
-     * @param chicken
-     *     The {@link Chicken} to capture.
-     *
+     * @param chicken The {@link Chicken} to capture.
      * @return The pocket chicken item.
      */
     @Nonnull
@@ -101,7 +94,11 @@ public final class PocketChickenUtils {
         DNA dna;
         String uuid = chicken.getUniqueId().toString();
 
-        if (chicken.hasMetadata(Keys.METADATA)) {
+        if (PersistentDataAPI.hasString(chicken, Keys.CHICKEN_DNA)) {
+            String dnaStr = PersistentDataAPI.getString(chicken, Keys.CHICKEN_DNA);
+            GeneticChickengineering.debug("captured chicken has data in pdc: {0}", dnaStr);
+            dna = new DNA(dnaStr);
+        } else if (chicken.hasMetadata(Keys.METADATA)) {
             String dnaStr = chicken.getMetadata(Keys.METADATA).get(0).asString();
             GeneticChickengineering.debug("captured chicken has meta data: {0}", dnaStr);
             dna = new DNA(dnaStr);
@@ -133,18 +130,15 @@ public final class PocketChickenUtils {
             }
         }
 
-        setLore(item, json, dna);
+        setPocketChicken(item, json, dna);
         return item;
     }
 
     /**
      * Try to breed two chicken.
      *
-     * @param chick1
-     *     The first chicken.
-     * @param chick2
-     *     The second chicken.
-     *
+     * @param chick1 The first chicken.
+     * @param chick2 The second chicken.
      * @return The resulting baby chicken, or null if breeding failed.
      */
     @Nullable
@@ -155,10 +149,10 @@ public final class PocketChickenUtils {
 
         ItemMeta c1m = chick1.getItemMeta();
         ItemMeta c2m = chick2.getItemMeta();
-        if (PersistentDataAPI.hasIntArray(c1m, Keys.DNA) && PersistentDataAPI.hasIntArray(c2m, Keys.DNA)) {
-            DNA c1d = new DNA(PersistentDataAPI.getIntArray(c1m, Keys.DNA));
-            DNA c2d = new DNA(PersistentDataAPI.getIntArray(c2m, Keys.DNA));
-            return fromDNA(new DNA(c1d.split(), c2d.split()));
+        if (PersistentDataAPI.hasIntArray(c1m, Keys.POCKET_CHICKEN_DNA) && PersistentDataAPI.hasIntArray(c2m, Keys.POCKET_CHICKEN_DNA)) {
+            DNA c1d = new DNA(PersistentDataAPI.getIntArray(c1m, Keys.POCKET_CHICKEN_DNA));
+            DNA c2d = new DNA(PersistentDataAPI.getIntArray(c2m, Keys.POCKET_CHICKEN_DNA));
+            return fromDNA(new DNA(c1d.split(), c2d.split()), true);
         }
         return null;
     }
@@ -166,14 +160,13 @@ public final class PocketChickenUtils {
     /**
      * Creates a display item for the given product in the dictionary.
      *
-     * @param typing
-     *     The type of chicken.
+     * @param typing The type of chicken.
      */
     public static void createProductDisplay(int typing) {
         ItemStack fake = GCEItems.POCKET_CHICKEN.clone();
         DNA dna = new DNA(typing);
         String productRawName = ChickenTypes.getName(typing);
-        setLore(fake, null, dna);
+        setPocketChicken(fake, null, dna);
 
         // Use the chicken's resource as the icon
         String itemIDType = productRawName.replace(" ", "_").toUpperCase();
@@ -182,7 +175,7 @@ public final class PocketChickenUtils {
         // Since these will be "Pocket Chickens", they will spawn chickens when cheated into a player's inventory
         // We set the DNA on the icon so that it will spawn a chicken of the correct type
         ItemMeta meta = displayItem.getItemMeta();
-        PersistentDataAPI.setIntArray(meta, Keys.DNA, dna.getState());
+        PersistentDataAPI.setIntArray(meta, Keys.POCKET_CHICKEN_DNA, dna.getState());
         displayItem.setItemMeta(meta);
 
         // Register the display
@@ -201,33 +194,30 @@ public final class PocketChickenUtils {
     /**
      * Create a fresh new chicken based on the DNA.
      *
-     * @param dna
-     *     The DNA to use.
-     *
+     * @param dna    The DNA to use.
+     * @param isBaby Whether the chicken is a baby.
      * @return The new chicken item.
      */
     @Nonnull
-    public static ItemStack fromDNA(@Nonnull DNA dna) {
-        JsonObject json = getBabyJson();
+    public static ItemStack fromDNA(@Nonnull DNA dna, boolean isBaby) {
+        JsonObject json = getChickenJson(isBaby);
 
         ItemStack item = GCEItems.POCKET_CHICKEN.clone();
-        setLore(item, json, dna);
+        setPocketChicken(item, json, dna);
         return item;
     }
 
     @Nonnull
     public static DNA getDNA(@Nonnull ItemStack chicken) {
         ItemMeta meta = chicken.getItemMeta();
-        return new DNA(PersistentDataAPI.getIntArray(meta, Keys.DNA));
+        return new DNA(PersistentDataAPI.getIntArray(meta, Keys.POCKET_CHICKEN_DNA));
     }
 
     /**
      * Returns a number which reflects the number of homozygous dominant alleles in a chicken.
      * This is used to give a boosted rate to resource production from chickens which are "pure".
      *
-     * @param chicken
-     *     The chicken {@link ItemStack}.
-     *
+     * @param chicken The chicken {@link ItemStack}.
      * @return The DNA strength.
      */
     public static int getDNAStrength(@Nonnull ItemStack chicken) {
@@ -268,11 +258,11 @@ public final class PocketChickenUtils {
         return lore;
     }
 
-    public static void setLore(@Nonnull ItemStack item, @Nullable JsonObject json, @Nonnull DNA dna) {
+    public static void setPocketChicken(@Nonnull ItemStack item, @Nullable JsonObject json, @Nonnull DNA dna) {
         ItemMeta meta = item.getItemMeta();
-        PersistentDataAPI.setIntArray(meta, Keys.DNA, dna.getState());
+        PersistentDataAPI.setIntArray(meta, Keys.POCKET_CHICKEN_DNA, dna.getState());
         if (json != null) {
-            PersistentDataAPI.set(meta, Keys.ADAPTER, PocketChicken.ADAPTER, json);
+            PersistentDataAPI.set(meta, Keys.POCKET_CHICKEN_ADAPTER, PocketChicken.ADAPTER, json);
         }
         meta.setLore(getLore(json, dna));
 
@@ -284,7 +274,7 @@ public final class PocketChickenUtils {
             return 0d;
         }
         ItemMeta meta = chicken.getItemMeta();
-        JsonObject json = PersistentDataAPI.get(meta, Keys.ADAPTER, PocketChicken.ADAPTER);
+        JsonObject json = PersistentDataAPI.get(meta, Keys.POCKET_CHICKEN_ADAPTER, PocketChicken.ADAPTER);
         if (json != null) {
             return json.get("_health").getAsDouble();
         }
@@ -304,13 +294,13 @@ public final class PocketChickenUtils {
             return false;
         }
         ItemMeta meta = chicken.getItemMeta();
-        JsonObject json = PersistentDataAPI.get(meta, Keys.ADAPTER, PocketChicken.ADAPTER);
+        JsonObject json = PersistentDataAPI.get(meta, Keys.POCKET_CHICKEN_ADAPTER, PocketChicken.ADAPTER);
         if (json != null) {
             double oldHealth = json.get("_health").getAsDouble();
             double newHealth = Math.max(0d, Math.min(oldHealth - amount, 4d));
             // Adding existing properties overwrites them
             json.addProperty("_health", newHealth);
-            setLore(chicken, json, getDNA(chicken));
+            setPocketChicken(chicken, json, getDNA(chicken));
             return true;
         }
         return false;
@@ -345,13 +335,11 @@ public final class PocketChickenUtils {
     /**
      * Determines whether the chicken is an adult.
      *
-     * @param chicken
-     *     The chicken {@link ItemStack}.
-     *
+     * @param chicken The chicken {@link ItemStack}.
      * @return Whether the chicken is an adult.
      */
     public boolean isAdult(@Nonnull ItemStack chicken) {
-        JsonObject json = PersistentDataAPI.get(chicken.getItemMeta(), Keys.ADAPTER, PocketChicken.ADAPTER);
+        JsonObject json = PersistentDataAPI.get(chicken.getItemMeta(), Keys.POCKET_CHICKEN_ADAPTER, PocketChicken.ADAPTER);
         if (json != null) {
             return !json.get("baby").getAsBoolean();
         }
@@ -361,9 +349,7 @@ public final class PocketChickenUtils {
     /**
      * Determines whether the DNA of chicken is known.
      *
-     * @param chicken
-     *     The chicken {@link ItemStack}.
-     *
+     * @param chicken The chicken {@link ItemStack}.
      * @return Whether the DNA is known.
      */
     public boolean isLearned(@Nonnull ItemStack chicken) {
@@ -374,9 +360,7 @@ public final class PocketChickenUtils {
     /**
      * Learn the DNA of a chicken. This returns a new {@link ItemStack} with known DNA.
      *
-     * @param chicken
-     *     The chicken {@link ItemStack}.
-     *
+     * @param chicken The chicken {@link ItemStack}.
      * @return The new chicken {@link ItemStack}.
      */
     @Nonnull
@@ -384,11 +368,11 @@ public final class PocketChickenUtils {
         ItemStack item = chicken.clone();
         ItemMeta meta = item.getItemMeta();
 
-        if (PersistentDataAPI.hasIntArray(meta, Keys.DNA)) {
-            DNA dna = new DNA(PersistentDataAPI.getIntArray(meta, Keys.DNA));
+        if (PersistentDataAPI.hasIntArray(meta, Keys.POCKET_CHICKEN_DNA)) {
+            DNA dna = new DNA(PersistentDataAPI.getIntArray(meta, Keys.POCKET_CHICKEN_DNA));
             dna.learn();
-            JsonObject json = PersistentDataAPI.get(meta, Keys.ADAPTER, PocketChicken.ADAPTER);
-            setLore(item, json, dna);
+            JsonObject json = PersistentDataAPI.get(meta, Keys.POCKET_CHICKEN_ADAPTER, PocketChicken.ADAPTER);
+            setPocketChicken(item, json, dna);
         }
 
         return item;

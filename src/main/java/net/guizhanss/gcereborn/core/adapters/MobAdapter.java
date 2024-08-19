@@ -48,7 +48,6 @@ public interface MobAdapter<T extends LivingEntity> extends PersistentDataType<S
         }
 
         int fireTicks = json.get("_fireTicks").getAsInt();
-
         if (fireTicks > 0) {
             lore.add(localization.getString("lores.chicken.on-fire"));
         }

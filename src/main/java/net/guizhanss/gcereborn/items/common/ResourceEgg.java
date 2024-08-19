@@ -28,6 +28,7 @@ import net.guizhanss.gcereborn.items.GCEItems;
 import net.guizhanss.gcereborn.utils.PocketChickenUtils;
 
 public class ResourceEgg extends SimpleSlimefunItem<ItemUseHandler> implements NotPlaceable {
+
     private final Material resource;
     private final boolean allowInNether;
 
@@ -48,7 +49,7 @@ public class ResourceEgg extends SimpleSlimefunItem<ItemUseHandler> implements N
         } else {
             dna = new DNA(41);
         }
-        PocketChickenUtils.setLore(fake, null, dna);
+        PocketChickenUtils.setPocketChicken(fake, null, dna);
         recipe[4] = fake;
         return recipe;
     }

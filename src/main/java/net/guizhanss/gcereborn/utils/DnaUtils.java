@@ -11,6 +11,7 @@ import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public final class DnaUtils {
+
     @Nonnull
     public static List<String> getPossibleDNA() {
         List<String> dnaList = new LinkedList<>();
@@ -21,7 +22,7 @@ public final class DnaUtils {
                     for (int f = 2; f >= 0; f--) {
                         for (int s = 2; s >= 0; s--) {
                             for (int w = 2; w >= 0; w--) {
-                                int[] state = new int[] { b + b / 2, c + c / 2, d + d / 2, f + f / 2, s + s / 2, w + w / 2, 1 };
+                                int[] state = new int[] {b + b / 2, c + c / 2, d + d / 2, f + f / 2, s + s / 2, w + w / 2, 1};
                                 dnaList.add(new DNA(state).toString());
                             }
                         }

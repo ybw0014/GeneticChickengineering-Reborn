@@ -13,11 +13,14 @@ import lombok.experimental.UtilityClass;
 @SuppressWarnings("ConstantConditions")
 @UtilityClass
 public final class Keys {
-    public static final NamespacedKey DNA = get("gce_pocket_chicken_dna");
-    public static final NamespacedKey ADAPTER = get("gce_pocket_chicken_adapter");
+
+    public static final NamespacedKey CHICKEN_DNA = get("chicken_dna");
+    public static final NamespacedKey POCKET_CHICKEN_DNA = get("gce_pocket_chicken_dna");
+    public static final NamespacedKey POCKET_CHICKEN_ADAPTER = get("gce_pocket_chicken_adapter");
 
     public static final String METADATA = "gce_pocket_chicken_dna";
 
+    @Nonnull
     public static NamespacedKey get(@Nonnull String name) {
         Preconditions.checkArgument(name != null, "name cannot be null");
 
