@@ -17,7 +17,7 @@ import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 
 import net.guizhanss.gcereborn.GeneticChickengineering;
 import net.guizhanss.gcereborn.items.GCEItems;
-import net.guizhanss.gcereborn.utils.PocketChickenUtils;
+import net.guizhanss.gcereborn.utils.ChickenUtils;
 
 public class GeneticSequencer extends AbstractMachine {
 
@@ -37,20 +37,20 @@ public class GeneticSequencer extends AbstractMachine {
         var config = GeneticChickengineering.getConfigService();
         for (int slot : getInputSlots()) {
             ItemStack item = menu.getItemInSlot(slot);
-            if (!PocketChickenUtils.isPocketChicken(item) || PocketChickenUtils.isLearned(item)) {
+            if (!ChickenUtils.isPocketChicken(item) || ChickenUtils.isLearned(item)) {
                 continue;
             }
             ItemStack chicken = item.clone();
             // Just in case these got stacked somehow
             chicken.setAmount(1);
 
-            ItemStack learnedChicken = PocketChickenUtils.learnDNA(chicken);
+            ItemStack learnedChicken = ChickenUtils.learnDNA(chicken);
             if (config.isPainEnabled()) {
-                if (!PocketChickenUtils.survivesPain(learnedChicken) && !config.isPainDeathEnabled()) {
+                if (!ChickenUtils.survivesPain(learnedChicken) && !config.isPainDeathEnabled()) {
                     // stop processing when pain kill is disabled
                     continue;
                 }
-                PocketChickenUtils.possiblyHarm(learnedChicken);
+                ChickenUtils.possiblyHarm(learnedChicken);
             }
             MachineRecipe recipe = new MachineRecipe(
                 config.isTest() ? 1 : 30,
@@ -60,7 +60,7 @@ public class GeneticSequencer extends AbstractMachine {
             if (!InvUtils.fitAll(menu.toInventory(), recipe.getOutput(), getOutputSlots())) {
                 continue;
             }
-            if (config.isPainEnabled() && PocketChickenUtils.getHealth(learnedChicken) <= 0d) {
+            if (config.isPainEnabled() && ChickenUtils.getHealth(learnedChicken) <= 0d) {
                 ItemUtils.consumeItem(chicken, false);
                 menu.getBlock().getWorld().playSound(menu.getLocation(), Sound.ENTITY_CHICKEN_DEATH, 1f, 1f);
                 continue;

@@ -13,7 +13,7 @@ import io.github.thebusybiscuit.slimefun4.implementation.SlimefunItems;
 
 import net.guizhanss.gcereborn.GeneticChickengineering;
 import net.guizhanss.gcereborn.items.GCEItems;
-import net.guizhanss.gcereborn.utils.PocketChickenUtils;
+import net.guizhanss.gcereborn.utils.ChickenUtils;
 
 import lombok.experimental.UtilityClass;
 
@@ -111,7 +111,7 @@ public final class ChickenTypes {
 
     public static void registerChickens() {
         for (int i = TYPES.size() - 1; i >= 0; i--) {
-            PocketChickenUtils.createProductDisplay(i);
+            ChickenUtils.createProductDisplay(i);
         }
         GeneticChickengineering.log(Level.INFO,
             GeneticChickengineering.getLocalization().getString("console.load.chickens", TYPES.size()));

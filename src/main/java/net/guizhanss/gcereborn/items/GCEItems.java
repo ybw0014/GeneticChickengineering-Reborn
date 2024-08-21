@@ -24,6 +24,7 @@ public final class GCEItems {
     public static final SlimefunItemStack EXCITATION_CHAMBER_3;
     public static final SlimefunItemStack PRIVATE_COOP;
     public static final SlimefunItemStack RESTORATION_CHAMBER;
+    public static final SlimefunItemStack GROWTH_CHAMBER;
 
     private static final String LORE_RIGHT_CLICK_TO_USE;
 
@@ -94,6 +95,13 @@ public final class GCEItems {
             "",
             LoreBuilder.machine(MachineTier.MEDIUM, MachineType.MACHINE),
             LoreBuilder.powerPerSecond(4)
+        );
+        GROWTH_CHAMBER = GeneticChickengineering.getLocalization().getItem(
+            "GROWTH_CHAMBER",
+            Material.GREEN_SHULKER_BOX,
+            "",
+            LoreBuilder.machine(MachineTier.ADVANCED, MachineType.MACHINE),
+            LoreBuilder.powerPerSecond(20)
         );
         // @formatter:on
     }

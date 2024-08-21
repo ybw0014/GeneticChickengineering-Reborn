@@ -25,7 +25,7 @@ import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction
 import net.guizhanss.gcereborn.GeneticChickengineering;
 import net.guizhanss.gcereborn.core.genetics.DNA;
 import net.guizhanss.gcereborn.items.GCEItems;
-import net.guizhanss.gcereborn.utils.PocketChickenUtils;
+import net.guizhanss.gcereborn.utils.ChickenUtils;
 
 public class ResourceEgg extends SimpleSlimefunItem<ItemUseHandler> implements NotPlaceable {
 
@@ -49,7 +49,7 @@ public class ResourceEgg extends SimpleSlimefunItem<ItemUseHandler> implements N
         } else {
             dna = new DNA(41);
         }
-        PocketChickenUtils.setPocketChicken(fake, null, dna);
+        ChickenUtils.setPocketChicken(fake, null, dna);
         recipe[4] = fake;
         return recipe;
     }

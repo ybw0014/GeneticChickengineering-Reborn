@@ -159,7 +159,7 @@ public class GeneticChickengineering extends AbstractAddon {
 
     @Override
     protected void autoUpdate() {
-        if (getPluginVersion().startsWith("DEV")) {
+        if (getPluginVersion().startsWith("Dev")) {
             new BlobBuildUpdater(this, getFile(), getGithubRepo()).start();
         } else if (getPluginVersion().startsWith("Build")) {
             try {

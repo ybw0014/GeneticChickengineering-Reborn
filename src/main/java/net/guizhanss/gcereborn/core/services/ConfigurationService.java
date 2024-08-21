@@ -28,6 +28,8 @@ public final class ConfigurationService {
     private boolean painDeathEnabled;
     private int healRate;
     private boolean netherWaterEnabled;
+    private boolean growthChamberEnabled;
+    private int growthChamberTime;
     private boolean commandsEnabled;
 
     public ConfigurationService(GeneticChickengineering plugin) {
@@ -52,6 +54,8 @@ public final class ConfigurationService {
         painDeathEnabled = config.getBoolean("options.pain-kills", false);
         healRate = config.getInt("options.heal-rate", 1, 2, 120);
         netherWaterEnabled = config.getBoolean("options.allow-nether-water", false);
+        growthChamberEnabled = config.getBoolean("options.enable-growth-chamber", false);
+        growthChamberTime = config.getInt("options.growth-chamber-time", 1, 60, 600);
         commandsEnabled = config.getBoolean("commands.enabled", true);
 
         config.save();

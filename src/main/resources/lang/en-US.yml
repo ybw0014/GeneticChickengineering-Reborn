@@ -78,6 +78,11 @@ items:
     name: "&eRestoration Chamber"
     lore:
       - "&7Can heal chickens."
+  GROWTH_CHAMBER:
+    name: "&eGrowth Chamber"
+    lore:
+      - "&7Can raise baby chickens"
+      - "&7with wheat seeds."
 
 lores:
   right-click-to-use: "&eRight Click&7 to use"

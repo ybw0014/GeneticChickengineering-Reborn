@@ -20,7 +20,7 @@ import io.github.thebusybiscuit.slimefun4.implementation.items.SimpleSlimefunIte
 import io.github.thebusybiscuit.slimefun4.libraries.dough.protection.Interaction;
 
 import net.guizhanss.gcereborn.GeneticChickengineering;
-import net.guizhanss.gcereborn.utils.PocketChickenUtils;
+import net.guizhanss.gcereborn.utils.ChickenUtils;
 
 public class ChickenNet extends SimpleSlimefunItem<EntityInteractHandler> implements NotPlaceable {
 
@@ -45,7 +45,7 @@ public class ChickenNet extends SimpleSlimefunItem<EntityInteractHandler> implem
             }
 
             Location l = chicken.getLocation().toCenterLocation();
-            ItemStack pocketChicken = PocketChickenUtils.capture(chicken);
+            ItemStack pocketChicken = ChickenUtils.capture(chicken);
             l.getWorld().dropItemNaturally(l, pocketChicken);
             l.getWorld().playSound(l, Sound.ENTITY_CHICKEN_EGG, 1F, 1F);
         };

@@ -14,7 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import net.guizhanss.gcereborn.GeneticChickengineering;
 import net.guizhanss.gcereborn.core.commands.AbstractSubCommand;
 import net.guizhanss.gcereborn.core.genetics.DNA;
-import net.guizhanss.gcereborn.utils.PocketChickenUtils;
+import net.guizhanss.gcereborn.utils.ChickenUtils;
 import net.guizhanss.guizhanlib.minecraft.utils.InventoryUtil;
 
 public final class MakeChickenCommand extends AbstractSubCommand implements DnaCompletion {
@@ -46,7 +46,7 @@ public final class MakeChickenCommand extends AbstractSubCommand implements DnaC
         }
 
         DNA dna = new DNA(notation.toCharArray());
-        ItemStack chicken = PocketChickenUtils.fromDNA(dna, isBaby);
+        ItemStack chicken = ChickenUtils.fromDNA(dna, isBaby);
         InventoryUtil.push(p, chicken);
     }
 

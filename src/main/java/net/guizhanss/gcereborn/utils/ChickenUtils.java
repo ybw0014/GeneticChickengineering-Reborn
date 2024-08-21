@@ -12,6 +12,7 @@ import com.google.common.base.Preconditions;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Chicken;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -26,6 +27,7 @@ import net.guizhanss.gcereborn.items.chicken.ChickenTypes;
 import net.guizhanss.gcereborn.items.chicken.PocketChicken;
 import net.guizhanss.gcereborn.setup.Groups;
 import net.guizhanss.gcereborn.setup.RecipeTypes;
+import net.guizhanss.guizhanlib.minecraft.utils.MinecraftVersionUtil;
 
 import lombok.experimental.UtilityClass;
 
@@ -33,7 +35,7 @@ import lombok.experimental.UtilityClass;
  * Utility class for {@link PocketChicken}.
  */
 @UtilityClass
-public final class PocketChickenUtils {
+public final class ChickenUtils {
 
     /**
      * Determine whether an {@link ItemStack} is a {@link PocketChicken}.
@@ -42,8 +44,7 @@ public final class PocketChickenUtils {
      * @return Whether the {@link ItemStack} is a {@link PocketChicken}.
      */
     public boolean isPocketChicken(@Nullable ItemStack item) {
-        return item != null && !item.getType().isAir() && item.hasItemMeta()
-            && PersistentDataAPI.hasIntArray(item.getItemMeta(), Keys.POCKET_CHICKEN_DNA);
+        return item != null && !item.getType().isAir() && item.hasItemMeta() && PersistentDataAPI.hasIntArray(item.getItemMeta(), Keys.POCKET_CHICKEN_DNA);
     }
 
     /**
@@ -68,7 +69,7 @@ public final class PocketChickenUtils {
         json.addProperty("_gravity", true);
         json.addProperty("_fireTicks", 0);
         json.addProperty("baby", isBaby);
-        json.addProperty("_age", isBaby ? -24000 : 0);
+        json.addProperty("_age", isBaby ? -24000 : 6000);
         json.addProperty("_ageLock", false);
         json.addProperty("_breedable", false);
         json.addProperty("_loveModeTicks", 0);
@@ -170,8 +171,7 @@ public final class PocketChickenUtils {
 
         // Use the chicken's resource as the icon
         String itemIDType = productRawName.replace(" ", "_").toUpperCase();
-        SlimefunItemStack displayItem = new SlimefunItemStack("GCE_" + itemIDType + "_CHICKEN_ICON",
-            ChickenTypes.getProduct(typing));
+        SlimefunItemStack displayItem = new SlimefunItemStack("GCE_" + itemIDType + "_CHICKEN_ICON", ChickenTypes.getProduct(typing));
         // Since these will be "Pocket Chickens", they will spawn chickens when cheated into a player's inventory
         // We set the DNA on the icon so that it will spawn a chicken of the correct type
         ItemMeta meta = displayItem.getItemMeta();
@@ -179,6 +179,7 @@ public final class PocketChickenUtils {
         displayItem.setItemMeta(meta);
 
         // Register the display
+        // @formatter:off
         new PocketChicken(
             Groups.DICTIONARY,
             displayItem,
@@ -189,6 +190,7 @@ public final class PocketChickenUtils {
                 null, null, null
             }
         ).register(GeneticChickengineering.getInstance());
+        // @formatter:on
     }
 
     /**
@@ -289,7 +291,7 @@ public final class PocketChickenUtils {
         return harm(chicken, 0.25);
     }
 
-    public boolean harm(@Nullable ItemStack chicken, double amount) {
+    public boolean harm(@Nullable ItemStack chicken, double damage) {
         if (chicken == null || chicken.getType().isAir()) {
             return false;
         }
@@ -297,8 +299,7 @@ public final class PocketChickenUtils {
         JsonObject json = PersistentDataAPI.get(meta, Keys.POCKET_CHICKEN_ADAPTER, PocketChicken.ADAPTER);
         if (json != null) {
             double oldHealth = json.get("_health").getAsDouble();
-            double newHealth = Math.max(0d, Math.min(oldHealth - amount, 4d));
-            // Adding existing properties overwrites them
+            double newHealth = Math.max(0d, Math.min(oldHealth - damage, 4d));
             json.addProperty("_health", newHealth);
             setPocketChicken(chicken, json, getDNA(chicken));
             return true;
@@ -325,11 +326,36 @@ public final class PocketChickenUtils {
         return ChickenTypes.getProduct(dna.getTyping());
     }
 
+    /**
+     * Returns the number of homozygous recessive genes in the chicken
+     * which represents the difficulty of obtaining this chicken
+     *
+     * @param chicken The chicken {@link ItemStack}.
+     * @return The DNA tier.
+     */
     public int getResourceTier(@Nonnull ItemStack chicken) {
-        // Returns the number of homozygous recessive genes in the chicken
-        // which represents the difficulty of obtaining this chicken
         DNA dna = getDNA(chicken);
         return dna.getTier();
+    }
+
+    public boolean isFood(@Nullable ItemStack item) {
+        if (item == null || item.getType().isAir() || item.hasItemMeta()) {
+            return false;
+        }
+        Material type = item.getType();
+        if (type == Material.WHEAT_SEEDS || type == Material.BEETROOT_SEEDS || type == Material.MELON_SEEDS || type == Material.PUMPKIN_SEEDS) {
+            return true;
+        }
+
+        if (MinecraftVersionUtil.isAtLeast(19, 4) && type == Material.TORCHFLOWER_SEEDS) {
+            return true;
+        }
+
+        if (MinecraftVersionUtil.isAtLeast(20) && type == Material.PITCHER_POD) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

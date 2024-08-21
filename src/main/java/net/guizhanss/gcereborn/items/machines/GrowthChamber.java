@@ -3,12 +3,16 @@ package net.guizhanss.gcereborn.items.machines;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.google.gson.JsonObject;
+
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import io.github.thebusybiscuit.slimefun4.api.items.ItemGroup;
 import io.github.thebusybiscuit.slimefun4.api.items.SlimefunItemStack;
 import io.github.thebusybiscuit.slimefun4.api.recipes.RecipeType;
+import io.github.thebusybiscuit.slimefun4.libraries.dough.data.persistent.PersistentDataAPI;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.inventory.InvUtils;
 import io.github.thebusybiscuit.slimefun4.libraries.dough.items.ItemUtils;
 
@@ -16,19 +20,21 @@ import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.abstractItems.MachineRecip
 import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 
 import net.guizhanss.gcereborn.GeneticChickengineering;
-import net.guizhanss.gcereborn.items.GCEItems;
+import net.guizhanss.gcereborn.core.genetics.DNA;
+import net.guizhanss.gcereborn.items.chicken.PocketChicken;
 import net.guizhanss.gcereborn.utils.ChickenUtils;
+import net.guizhanss.gcereborn.utils.Keys;
 
-public class RestorationChamber extends AbstractMachine {
+public class GrowthChamber extends AbstractMachine {
 
-    public RestorationChamber(ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
+    public GrowthChamber(ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe);
     }
 
     @Override
     @Nonnull
     public ItemStack getProgressBar() {
-        return GCEItems.POCKET_CHICKEN.clone();
+        return new ItemStack(Material.WHEAT_SEEDS);
     }
 
     @Override
@@ -44,9 +50,9 @@ public class RestorationChamber extends AbstractMachine {
                 continue;
             }
 
-            if (ChickenUtils.isPocketChicken(item)) {
+            if (ChickenUtils.isPocketChicken(item) && !ChickenUtils.isAdult(item)) {
                 chicken = item;
-            } else if (ChickenUtils.isFood(item)) {
+            } else if (ChickenUtils.isFood(item) && item.getAmount() == item.getMaxStackSize()) {
                 seed = item;
             }
         }
@@ -55,31 +61,25 @@ public class RestorationChamber extends AbstractMachine {
             return null;
         }
 
-        double health = ChickenUtils.getHealth(chicken);
-        int seedAmount = seed.getAmount();
-        int toConsume = 0;
-        while (seedAmount > 0 && health < 4d) {
-            seedAmount--;
-            toConsume++;
-            health = health + 0.25;
-        }
-        if (toConsume == 0) {
-            return null;
-        }
-        ItemStack recipeSeeds = seed.clone();
-        recipeSeeds.setAmount(toConsume);
-        ItemStack recipeChick = chicken.clone();
-        ChickenUtils.heal(recipeChick, toConsume * 0.25);
+        ItemStack output = chicken.clone();
+        ItemMeta outputMeta = output.getItemMeta();
+        JsonObject adapter = PersistentDataAPI.get(outputMeta, Keys.POCKET_CHICKEN_ADAPTER, PocketChicken.ADAPTER);
+        var dnaState = PersistentDataAPI.getIntArray(outputMeta, Keys.POCKET_CHICKEN_DNA);
+        adapter.addProperty("baby", false);
+        adapter.addProperty("_age", 6000);
+        adapter.addProperty("_breedable", false);
+        ChickenUtils.setPocketChicken(output, adapter, new DNA(dnaState));
+
         MachineRecipe recipe = new MachineRecipe(
-            config.isTest() ? 1 : config.getHealRate() * toConsume,
-            new ItemStack[] {recipeSeeds, chicken.clone()},
-            new ItemStack[] {recipeChick}
+            config.isTest() ? 1 : config.getGrowthChamberTime(),
+            new ItemStack[] {seed.clone(), chicken.clone()},
+            new ItemStack[] {output}
         );
         if (!InvUtils.fitAll(menu.toInventory(), recipe.getOutput(), getOutputSlots())) {
             return null;
         }
         ItemUtils.consumeItem(chicken, false);
-        ItemUtils.consumeItem(seed, toConsume, false);
+        ItemUtils.consumeItem(seed, seed.getMaxStackSize(), false);
         return recipe;
     }
 }

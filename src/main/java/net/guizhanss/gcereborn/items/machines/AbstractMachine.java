@@ -13,6 +13,8 @@ import me.mrCookieSlime.Slimefun.Objects.SlimefunItem.abstractItems.AContainer;
 
 public abstract class AbstractMachine extends AContainer {
 
+    protected static final int INFO_SLOT = 22;
+
     private final String identifier;
 
     @ParametersAreNonnullByDefault

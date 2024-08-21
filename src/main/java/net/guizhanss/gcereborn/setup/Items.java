@@ -16,6 +16,7 @@ import net.guizhanss.gcereborn.items.common.ChickenNet;
 import net.guizhanss.gcereborn.items.common.ResourceEgg;
 import net.guizhanss.gcereborn.items.machines.ExcitationChamber;
 import net.guizhanss.gcereborn.items.machines.GeneticSequencer;
+import net.guizhanss.gcereborn.items.machines.GrowthChamber;
 import net.guizhanss.gcereborn.items.machines.PrivateCoop;
 import net.guizhanss.gcereborn.items.machines.RestorationChamber;
 
@@ -125,6 +126,19 @@ public final class Items {
                     new ItemStack(Material.PINK_TERRACOTTA), SlimefunItems.HEATING_COIL, new ItemStack(Material.PINK_TERRACOTTA)
                 }
             ).setCapacity(30).setEnergyConsumption(2).setProcessingSpeed(1).register(plugin);
+        }
+
+        if (GeneticChickengineering.getConfigService().isGrowthChamberEnabled()) {
+            new GrowthChamber(
+                Groups.MAIN,
+                GCEItems.GROWTH_CHAMBER,
+                RecipeType.ENHANCED_CRAFTING_TABLE,
+                new ItemStack[] {
+                    SlimefunItems.GOLD_24K, SlimefunItems.TIN_CAN, SlimefunItems.GOLD_24K,
+                    SlimefunItems.ELECTRIC_MOTOR, new ItemStack(Material.HAY_BLOCK), SlimefunItems.ELECTRIC_MOTOR,
+                    SlimefunItems.LEAD_INGOT, SlimefunItems.FOOD_FABRICATOR, SlimefunItems.LEAD_INGOT
+                }
+            ).setCapacity(200).setEnergyConsumption(20).setProcessingSpeed(1).register(plugin);
         }
 
         ChickenTypes.registerChickens();

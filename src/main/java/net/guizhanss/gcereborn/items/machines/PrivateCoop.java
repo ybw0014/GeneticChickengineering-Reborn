@@ -29,11 +29,9 @@ import me.mrCookieSlime.Slimefun.api.inventory.BlockMenu;
 import net.guizhanss.gcereborn.GeneticChickengineering;
 import net.guizhanss.gcereborn.items.GCEItems;
 import net.guizhanss.gcereborn.utils.GuiItems;
-import net.guizhanss.gcereborn.utils.PocketChickenUtils;
+import net.guizhanss.gcereborn.utils.ChickenUtils;
 
 public class PrivateCoop extends AbstractMachine {
-
-    private static final int INFO_SLOT = 22;
 
     public PrivateCoop(ItemGroup itemGroup, SlimefunItemStack item, RecipeType recipeType, ItemStack[] recipe) {
         super(itemGroup, item, recipeType, recipe);
@@ -48,6 +46,7 @@ public class PrivateCoop extends AbstractMachine {
     @Override
     protected void tick(@Nonnull Block b) {
         super.tick(b);
+
         MachineProcessor<CraftingOperation> processor = getMachineProcessor();
         if (processor.getOperation(b) != null) {
             if (ThreadLocalRandom.current().nextDouble() < 0.25) {
@@ -75,7 +74,7 @@ public class PrivateCoop extends AbstractMachine {
                 // a length of two anyway, saving some time
                 return parents;
             }
-            if (PocketChickenUtils.isPocketChicken(parent) && PocketChickenUtils.isAdult(parent)) {
+            if (ChickenUtils.isPocketChicken(parent) && ChickenUtils.isAdult(parent)) {
                 parents.add(parent);
             }
         }
@@ -91,7 +90,7 @@ public class PrivateCoop extends AbstractMachine {
             return null;
         }
 
-        ItemStack baby = PocketChickenUtils.breed(parents.get(0), parents.get(1));
+        ItemStack baby = ChickenUtils.breed(parents.get(0), parents.get(1));
         if (baby == null) {
             // Shouldn't ever be here, just in case
             return null;
@@ -110,11 +109,11 @@ public class PrivateCoop extends AbstractMachine {
 
         if (GeneticChickengineering.getConfigService().isPainEnabled()) {
             for (ItemStack parent : parents) {
-                if (!PocketChickenUtils.survivesPain(parent) && !GeneticChickengineering.getConfigService().isPainDeathEnabled()) {
+                if (!ChickenUtils.survivesPain(parent) && !GeneticChickengineering.getConfigService().isPainDeathEnabled()) {
                     return null;
                 }
-                PocketChickenUtils.possiblyHarm(parent);
-                if (PocketChickenUtils.getHealth(parent) <= 0d) {
+                ChickenUtils.possiblyHarm(parent);
+                if (ChickenUtils.getHealth(parent) <= 0d) {
                     ItemUtils.consumeItem(parent, false);
                     menu.getBlock().getWorld().playSound(menu.getLocation(), Sound.ENTITY_CHICKEN_DEATH, 1f, 1f);
                     return null;
