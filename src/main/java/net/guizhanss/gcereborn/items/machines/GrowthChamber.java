@@ -62,6 +62,7 @@ public class GrowthChamber extends AbstractMachine {
         }
 
         ItemStack output = chicken.clone();
+        output.setAmount(1);
         ItemMeta outputMeta = output.getItemMeta();
         JsonObject adapter = PersistentDataAPI.get(outputMeta, Keys.POCKET_CHICKEN_ADAPTER, PocketChicken.ADAPTER);
         var dnaState = PersistentDataAPI.getIntArray(outputMeta, Keys.POCKET_CHICKEN_DNA);
