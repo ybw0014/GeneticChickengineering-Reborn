@@ -46,6 +46,8 @@ options:
   # The time for growth chamber to raise a baby chicken to an adult chicken (in seconds)
   # Default: 60, Range: 1 ~ 600
   growth-chamber-time: 60
+
+# The permission nodes are just here for reference. Changing them will not affect the plugin.
 commands:
   enabled: true
   subcommands:

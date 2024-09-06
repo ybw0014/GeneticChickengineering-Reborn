@@ -26,7 +26,7 @@ Paper-specific API calls, and as such will not work on Spigot servers.
 
 ## Plugin Basics
 *See the*
-[*wiki*](https://github.com/kii-chan-reloaded/GeneticChickengineering/wiki)
+[*wiki*](https://docs.ybw0014.dev/genetic-chickengineering/)
 *for more detailed information*
 
 Overworld chickens have almost completely become the dominant, "normal" chickens
@@ -54,7 +54,7 @@ genes. Add some cargo nodes to the Excitation Chamber to keep a steady,
 neverending supply of different resources!
 
 See
-[the sequence table](https://github.com/kii-chan-reloaded/GeneticChickengineering/wiki/Sequencing-Guide)
+[the sequence table](https://docs.ybw0014.dev/genetic-chickengineering/misc/sequencing-guide)
 or your in-game Slimefun Guide to learn how to make specific resources, or just
 start breeding chickens like crazy until you have all 64 varieties!
 
