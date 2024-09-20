@@ -90,7 +90,6 @@ public final class ChickenUtils {
         GeneticChickengineering.getIntegrationService().captureChicken(chicken);
         JsonObject json = PocketChicken.ADAPTER.saveData(chicken);
         ItemStack item = GCEItems.POCKET_CHICKEN.clone();
-        var db = GeneticChickengineering.getDatabaseService();
 
         DNA dna;
         String uuid = chicken.getUniqueId().toString();
@@ -98,16 +97,6 @@ public final class ChickenUtils {
         if (PersistentDataAPI.hasString(chicken, Keys.CHICKEN_DNA)) {
             String dnaStr = PersistentDataAPI.getString(chicken, Keys.CHICKEN_DNA);
             GeneticChickengineering.debug("captured chicken has data in pdc: {0}", dnaStr);
-            dna = new DNA(dnaStr);
-        } else if (chicken.hasMetadata(Keys.METADATA)) {
-            String dnaStr = chicken.getMetadata(Keys.METADATA).get(0).asString();
-            GeneticChickengineering.debug("captured chicken has meta data: {0}", dnaStr);
-            dna = new DNA(dnaStr);
-            db.removeChicken(uuid);
-        } else if (db.hasChicken(uuid)) {
-            // Checked if the UUID existed first, so null won't be returned
-            String dnaStr = db.getChickenDNA(uuid);
-            GeneticChickengineering.debug("captured chicken in database: {0}", dnaStr);
             dna = new DNA(dnaStr);
         } else {
             GeneticChickengineering.debug("captured chicken has no DNA information");

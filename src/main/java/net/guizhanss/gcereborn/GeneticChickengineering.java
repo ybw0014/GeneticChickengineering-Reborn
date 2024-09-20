@@ -16,10 +16,8 @@ import io.github.thebusybiscuit.slimefun4.libraries.paperlib.PaperLib;
 
 import net.guizhanss.gcereborn.core.commands.GCECommand;
 import net.guizhanss.gcereborn.core.services.ConfigurationService;
-import net.guizhanss.gcereborn.core.services.DatabaseService;
 import net.guizhanss.gcereborn.core.services.IntegrationService;
 import net.guizhanss.gcereborn.core.services.LocalizationService;
-import net.guizhanss.gcereborn.listeners.WorldSavedListener;
 import net.guizhanss.gcereborn.setup.Items;
 import net.guizhanss.gcereborn.setup.Researches;
 import net.guizhanss.guizhanlib.slimefun.addon.AbstractAddon;
@@ -33,7 +31,6 @@ public class GeneticChickengineering extends AbstractAddon {
 
     private ConfigurationService configService;
     private LocalizationService localization;
-    private DatabaseService dbService;
     private IntegrationService integrationService;
     private boolean debugEnabled = false;
 
@@ -49,11 +46,6 @@ public class GeneticChickengineering extends AbstractAddon {
     @Nonnull
     public static LocalizationService getLocalization() {
         return inst().localization;
-    }
-
-    @Nonnull
-    public static DatabaseService getDatabaseService() {
-        return inst().dbService;
     }
 
     @Nonnull
@@ -105,14 +97,6 @@ public class GeneticChickengineering extends AbstractAddon {
             return;
         }
 
-        // database
-        log(Level.INFO, localization.getString("console.load.database"));
-        dbService = new DatabaseService(this);
-        if (!dbService.isConnected()) {
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
-
         // items
         log(Level.INFO, localization.getString("console.load.items"));
         Items.setup(this);
@@ -122,7 +106,6 @@ public class GeneticChickengineering extends AbstractAddon {
         Researches.setup();
 
         // listeners
-        new WorldSavedListener(this);
 
         // commands
         if (configService.isCommandsEnabled()) {
@@ -140,17 +123,11 @@ public class GeneticChickengineering extends AbstractAddon {
 
         // metrics
         setupMetrics();
-
-        // run cleanup once after startup
-        getScheduler().run(() -> dbService.cleanup());
     }
 
     @Override
     public void disable() {
-        if (dbService != null) {
-            dbService.cleanup();
-            dbService.shutdown();
-        }
+        // do nothing
     }
 
     private void setupMetrics() {
